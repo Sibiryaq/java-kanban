@@ -1,87 +1,79 @@
-import java.util.ArrayList;
-import java.util.Arrays;
+import taskclasses.Epic;
+import taskclasses.Subtask;
+import taskclasses.Task;
 
 public class Main {
     public static void main(String[] args) {
 
         Manager manager = new Manager();
 
-        Task taskFirst = new Task("Покушать","Съесть бургер", "NEW");
-        Task taskSecond = new Task("Поспать","Выспаться", "DONE");
+        Task taskFirst = new Task("Покушать", "Съесть бургер", "NEW");
+        Task taskSecond = new Task("Поспать", "Выспаться", "DONE");
 
-        ArrayList<EpicTask.SubTask> subTasksEpicTaskFirst = new ArrayList<>();
-        EpicTask.SubTask subtaskFirstEpicTaskFirst = new EpicTask.SubTask("Закончить учебу",
-                "Сдать все спринты", "Своевременно выполнить ТЗ", "NEW");
-        EpicTask.SubTask subtaskSecondEpicTaskFirst = new EpicTask.SubTask("Закончить учебу",
-                "Сдать дипломный проект", "Выполнить дипломный проект", "DONE");
+        Epic epicTaskFirst = new Epic("Закончить учебу", "Получить сертификат обучения");
+        Epic epicTaskSecond = new Epic("Сменить работу", "Начать работать Java разработчиком");
 
-        subTasksEpicTaskFirst.add(subtaskFirstEpicTaskFirst);
-        subTasksEpicTaskFirst.add(subtaskSecondEpicTaskFirst);
+        Subtask subtaskFirst = new Subtask("Закончить учебу", "Сдать все спринты", 4);
+        Subtask subtaskSecond = new Subtask("Закончить учебу", "Сдать дипломный проект", 4);
 
-        EpicTask epicTaskFirst = new EpicTask("Закончить учебу",
-                "Получить сертификат обучения", subTasksEpicTaskFirst);
+        manager.taskCreator(taskFirst);
+        manager.taskCreator(taskSecond);
+        manager.epicCreator(epicTaskFirst);
+        manager.epicCreator(epicTaskSecond);
+        manager.subtaskCreator(subtaskFirst);
+        manager.subtaskCreator(subtaskSecond);
 
-        EpicTask.SubTask subtaskFirstEpicTaskSecond = new EpicTask.SubTask("Сменить работу",
-                "Закончить курс практикума","Научиться программировать на языке Java",
-                "NEW");
-        ArrayList<EpicTask.SubTask> subTasksEpicTaskSecond = new ArrayList<>();
+        System.out.println("\n    Получение списка всех задач:");
+        System.out.println(manager.getTasks());
+        System.out.println(manager.getTaskById(2));
+        System.out.println(manager.getEpics());
+        System.out.println(manager.getEpicById(4));
+        System.out.println(manager.getSubtasks());
+        System.out.println(manager.getSubtaskById(6));
 
-        subTasksEpicTaskSecond.add(subtaskFirstEpicTaskSecond);
+        System.out.println("\n    Получение по идентификатору:");
+        System.out.println(manager.getTasks());
+        System.out.println(manager.getEpics());
+        System.out.println(manager.getSubtasks());
 
-        EpicTask epicTaskSecond = new EpicTask("Сменить работу"
-                ,"Начать работать Java разработчиком", subTasksEpicTaskSecond);
-
-        manager.saveToStorage(taskFirst);
-        manager.saveToStorage(taskSecond);
-        manager.saveToStorage(subtaskFirstEpicTaskFirst);
-        manager.saveToStorage(subtaskSecondEpicTaskFirst);
-        manager.saveToStorage(epicTaskFirst);
-        manager.saveToStorage(subtaskFirstEpicTaskSecond);
-        manager.saveToStorage(epicTaskSecond);
-
-        System.out.println("1.1 Получение списка всех задач:");
-        System.out.println(Arrays.toString(manager.getCompleteListOfAnyTasks(manager.getTaskStorage()).toArray()));
-        System.out.println(Arrays.toString(manager.getCompleteListOfAnyTasks(manager.getEpicTaskStorage()).toArray()));
-        System.out.println(Arrays.toString(manager.getCompleteListOfAnyTasks(manager.getSubTaskStorage()).toArray()));
-
-        manager.deleteAllTasksOfAnyType(manager.getEpicTaskStorage());
-
-        System.out.println("1.2 Удаление всех задач:");
-        System.out.println(Arrays.toString(manager.getCompleteListOfAnyTasks(manager.getTaskStorage()).toArray()));
-        System.out.println(Arrays.toString(manager.getCompleteListOfAnyTasks(manager.getEpicTaskStorage()).toArray()));
-        System.out.println(Arrays.toString(manager.getCompleteListOfAnyTasks(manager.getSubTaskStorage()).toArray()));
-
-        System.out.println("1.3 Получение по идентификатору:");
-        System.out.println(manager.getTaskOfAnyTypeById(0));
-        System.out.println(manager.getTaskOfAnyTypeById(1));
-        System.out.println(manager.getTaskOfAnyTypeById(2));
-        System.out.println(manager.getTaskOfAnyTypeById(3));
-        System.out.println(manager.getTaskOfAnyTypeById(4));
-        System.out.println(manager.getTaskOfAnyTypeById(5));
-        System.out.println(manager.getTaskOfAnyTypeById(6));
-        System.out.println(manager.getTaskOfAnyTypeById(7));
-        System.out.println(manager.getTaskOfAnyTypeById(8));
-
-        System.out.println("1.4 Создание. Сам объект должен передаваться в качестве параметра:");
-        System.out.println(manager.createCopyOfTaskOfAnyType(taskFirst));
-        System.out.println(manager.createCopyOfTaskOfAnyType(epicTaskFirst));
-        System.out.println(manager.createCopyOfTaskOfAnyType(subtaskFirstEpicTaskFirst));
-
-        manager.updateTaskOfAnyType(5, epicTaskFirst);
-        manager.updateTaskOfAnyType(7, epicTaskSecond);
-
-        System.out.println("1.5 Обновление. Новая версия объекта с верным идентификатором " +
+        System.out.println("\n    Обновление. Новая версия объекта с верным идентификатором " +
                 "передаются в виде параметра:");
-        System.out.println(Arrays.toString(manager.getCompleteListOfAnyTasks(manager.getEpicTaskStorage()).toArray()));
+        taskFirst = manager.getTaskById(1);
+        taskFirst.setStatus("DONE");
+        manager.updateTask(taskFirst);
+        System.out.println(manager.getTasks());
 
-        manager.removeTaskOfAnyTypeById(1);
-        manager.removeTaskOfAnyTypeById(2);
+        subtaskFirst = manager.getSubtaskById(5);
+        subtaskFirst.setStatus("DONE");
+        manager.updateSubtask(subtaskFirst);
+        System.out.println(manager.getSubtasks());
 
-        System.out.println("1.6 Удаление по идентификатору:");
-        System.out.println(Arrays.toString(manager.getCompleteListOfAnyTasks(manager.getTaskStorage()).toArray()));
+        subtaskSecond = manager.getSubtaskById(6);
+        subtaskSecond.setStatus("DONE");
+        manager.updateSubtask(subtaskSecond);
+        System.out.println(manager.getSubtasks());
 
-        System.out.println("2.1 Получение списка всех подзадач определённого эпика:");
-        System.out.println(manager.getCompleteListOfSubTaskByEpicTask(epicTaskFirst));
-        System.out.println(manager.getCompleteListOfSubTaskByEpicTask(epicTaskSecond));
+        System.out.println("\n    Получение списка всех подзадач определённого эпика:");
+        System.out.println(manager.getAllSubtasks(epicTaskFirst));
+        System.out.println(manager.getAllSubtasks(epicTaskSecond));
+
+        System.out.println("\n    Удаление по идентификатору:");
+        manager.deleteEpic(4);
+        System.out.println(manager.getEpicById(4));
+        manager.deleteTask(2);
+        System.out.println(manager.getTaskById(2));
+        manager.deleteSubtask(2);
+        System.out.println(manager.getSubtaskById(6));
+
+        System.out.println(manager.getEpics());
+        System.out.println(manager.getSubtasks());
+
+        System.out.println("\n    Удаление всех задач:");
+        manager.deleteTaskList();
+        manager.deleteEpicList();
+        manager.deleteSubtaskList();
+        System.out.println(manager.getTasks());
+        System.out.println(manager.getSubtasks());
+        System.out.println(manager.getEpics());
     }
 }
