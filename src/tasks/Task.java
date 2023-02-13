@@ -1,17 +1,14 @@
-package taskclasses;
+package tasks;
+
+import logic.TaskStatus;
 
 import java.util.Objects;
+
 public class Task {
     protected String title;
     protected String description;
     protected int id;
-    protected String status;
-
-    public Task(String title, String description, String status) {
-        this.title = title;
-        this.description = description;
-        this.status = status;
-    }
+    protected TaskStatus status;
 
     public Task(String title, String description) {
         this.title = title;
@@ -42,20 +39,20 @@ public class Task {
         this.id = id;
     }
 
-    public String getStatus() {
+    public TaskStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(TaskStatus status) {
         this.status = status;
     }
 
     @Override
-        public String toString() {
-            return "ID задачи Task=\"" + id
-               + "\", Название задачи=\"" + title
-               + "\", Описание=\"" + description
-               + "\", Статус=\"" + status + "\"";
+    public String toString() {
+        return "ID задачи Task=\"" + id
+                + "\", Название задачи=\"" + title
+                + "\", Описание=\"" + description
+                + "\", Статус=\"" + status + "\"";
     }
 
     @Override
