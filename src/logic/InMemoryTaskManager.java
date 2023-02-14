@@ -42,17 +42,17 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Task> getTasks() {
-        return new ArrayList<>(this.taskHashMap.values());
+        return new ArrayList<>(taskHashMap.values());//Можно без this, по коду будет понятно, что запрашивается переменная класса
     }
 
     @Override
     public List<Subtask> getSubtasks() {
-        return new ArrayList<>(this.subtaskHashMap.values());
+        return new ArrayList<>(subtaskHashMap.values());//Можно без this, по коду будет понятно, что запрашивается переменная класса
     }
 
     @Override
     public List<Epic> getEpics() {
-        return new ArrayList<>(this.epicHashMap.values());
+        return new ArrayList<>(epicHashMap.values());//Можно без this, по коду будет понятно, что запрашивается переменная класса
     }
 
     @Override
@@ -159,13 +159,13 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateStatusEpic(Epic epic) {
         if (epic.getSubtaskIdList().isEmpty() || checkStatus(TaskStatus.NEW, epic)) {
             epic.setStatus(TaskStatus.NEW);
-
+            return; // Можно сразу вернуться из метода, чтобы не выполнять дальнейший код
         } else if (checkStatus(TaskStatus.DONE, epic)) {
             epic.setStatus(TaskStatus.DONE);
-
         } else {
             epic.setStatus(TaskStatus.IN_PROGRESS);
         }
+
     }
 
     @Override
