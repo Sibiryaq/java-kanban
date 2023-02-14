@@ -49,4 +49,6 @@ public interface TaskManager {
     void updateStatusEpic(Epic epic);
 
     ArrayList<Subtask> getAllSubtasks(Epic epic);
+    List<Task> getHistory();
+
 }
