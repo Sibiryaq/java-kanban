@@ -119,9 +119,9 @@ public class InMemoryTaskManager implements TaskManager {
         if (epicHashMap.containsKey(id)) {
             Epic epic = epicHashMap.get(id);
             ArrayList<Integer> subtaskIdList = epic.getSubtaskIdList();
-            for (int subtasks : subtaskIdList) {
-                subtaskHashMap.remove(subtasks);
-            }
+            for (int subtask : subtaskIdList) { // "лучше назвать переменную subtask"
+                subtaskHashMap.remove(subtask);
+            }   //ps Полностью согласен, вот как раз на эту тему читаю - https://habr.com/ru/company/dododev/blog/714512/
             epicHashMap.remove(id);
         }
     }
@@ -150,8 +150,8 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public boolean checkStatus(TaskStatus status, Epic epic) {
-        for (int subtaskIdList : epic.getSubtaskIdList()) {
-            if (!Objects.equals(subtaskHashMap.get(subtaskIdList).getStatus(), status)) {
+        for (int subtaskId : epic.getSubtaskIdList()) {
+            if (!Objects.equals(subtaskHashMap.get(subtaskId).getStatus(), status)) {
                 return false;
             }
         }
