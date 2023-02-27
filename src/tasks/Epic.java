@@ -20,7 +20,8 @@ public class Epic extends Task {
                 + "\", Название задачи=\"" + title
                 + "\", Описание=\"" + description
                 + "\", Идентификаторы подзадач в эпике=\"" + subtaskIdList
-                + "\", Статус=\"" + status + "\"";
+                + "\", Статус=\"" + status + "\""
+                + "\n";
     }
 
 

@@ -41,18 +41,18 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public List<Task> getTasks() {
-        return new ArrayList<>(taskHashMap.values());//Можно без this, по коду будет понятно, что запрашивается переменная класса
+    public HashMap<Integer, Task> getTasks() {
+        return taskHashMap;
     }
 
     @Override
-    public List<Subtask> getSubtasks() {
-        return new ArrayList<>(subtaskHashMap.values());//Можно без this, по коду будет понятно, что запрашивается переменная класса
+    public HashMap<Integer, Subtask> getSubtasks() {
+        return subtaskHashMap;
     }
 
     @Override
-    public List<Epic> getEpics() {
-        return new ArrayList<>(epicHashMap.values());//Можно без this, по коду будет понятно, что запрашивается переменная класса
+    public HashMap<Integer, Epic> getEpics() {
+        return epicHashMap;
     }
 
     @Override
@@ -85,7 +85,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Subtask getSubtaskById(int id) {
         Subtask idSub = subtaskHashMap.get(id);
-        historyManager.addToHistory(idSub );
+        historyManager.addToHistory(idSub);
         return idSub;
     }
 
@@ -98,8 +98,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteTask(int id) {
-        System.out.println("Задача с id# " + id + " удалена." + System.lineSeparator());
-        taskHashMap.remove(id);
+        if (taskHashMap.containsKey(id)) {
+            System.out.println("Задача с id# " + id + " удалена." + System.lineSeparator());
+            taskHashMap.remove(id);
+            historyManager.remove(id);
+        }
     }
 
     @Override
@@ -110,6 +113,7 @@ public class InMemoryTaskManager implements TaskManager {
             epic.getSubtaskIdList().remove((Integer) id);
             updateStatusEpic(epic);
             subtaskHashMap.remove(id);
+            historyManager.remove(id);
         }
     }
 
@@ -118,11 +122,12 @@ public class InMemoryTaskManager implements TaskManager {
         System.out.println("Эпик с id# " + id + " удален." + System.lineSeparator());
         if (epicHashMap.containsKey(id)) {
             Epic epic = epicHashMap.get(id);
-            ArrayList<Integer> subtaskIdList = epic.getSubtaskIdList();
-            for (int subtask : subtaskIdList) { // "лучше назвать переменную subtask"
-                subtaskHashMap.remove(subtask);
-            }   //ps Полностью согласен, вот как раз на эту тему читаю - https://habr.com/ru/company/dododev/blog/714512/
             epicHashMap.remove(id);
+            historyManager.remove(id);
+            for (int subtask : epic.getSubtaskIdList()) {
+                subtaskHashMap.remove(subtask);
+                historyManager.remove(subtask);
+            }
         }
     }
 
@@ -162,7 +167,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateStatusEpic(Epic epic) {
         if (epic.getSubtaskIdList().isEmpty() || checkStatus(TaskStatus.NEW, epic)) {
             epic.setStatus(TaskStatus.NEW);
-            return; // Можно сразу вернуться из метода, чтобы не выполнять дальнейший код
+            return;
         } else if (checkStatus(TaskStatus.DONE, epic)) {
             epic.setStatus(TaskStatus.DONE);
         } else {
@@ -181,7 +186,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public List<Task> getHistory() {
+    public List<Task> history() {
         return historyManager.getHistory();
     }
 

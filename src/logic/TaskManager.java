@@ -5,6 +5,7 @@ import tasks.Subtask;
 import tasks.Task;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public interface TaskManager {
@@ -14,11 +15,11 @@ public interface TaskManager {
 
     void epicCreator(Epic epic);
 
-    List<Task> getTasks();
+    HashMap<Integer, Task> getTasks();
 
-    List<Subtask> getSubtasks();
+    HashMap<Integer, Subtask> getSubtasks();
 
-    List<Epic> getEpics();
+    HashMap<Integer, Epic> getEpics();
 
     void deleteTaskList();
 
@@ -49,6 +50,7 @@ public interface TaskManager {
     void updateStatusEpic(Epic epic);
 
     ArrayList<Subtask> getAllSubtasks(Epic epic);
-    List<Task> getHistory();
+
+    List<Task> history();
 
 }

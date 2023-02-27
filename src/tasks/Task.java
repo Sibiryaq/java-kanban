@@ -15,22 +15,6 @@ public class Task {
         this.description = description;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public int getId() {
         return id;
     }
@@ -52,7 +36,8 @@ public class Task {
         return "ID задачи Task=\"" + id
                 + "\", Название задачи=\"" + title
                 + "\", Описание=\"" + description
-                + "\", Статус=\"" + status + "\"";
+                + "\", Статус=\"" + status + "\""
+                + "\n";
     }
 
     @Override
