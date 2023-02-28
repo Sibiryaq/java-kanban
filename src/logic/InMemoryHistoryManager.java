@@ -14,14 +14,11 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void addToHistory(Task task) {
-        if (task != null) {
             // Лучше перед удалением проверить, есть ли такой узел в мапе
             if (receivedTasks.containsKey(task.getId())) {
                 remove(task.getId());
             }
-
             linkLast(task);
-        }
     }
 
     @Override
