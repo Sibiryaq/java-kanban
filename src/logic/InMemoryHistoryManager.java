@@ -14,7 +14,11 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void addToHistory(Task task) {
-        if (!(task == null)) {
+        if (task != null) {
+            // Лучше перед удалением проверить, есть ли такой узел в мапе
+            if (receivedTasks.containsValue(task)) {
+                return;
+            }
             remove(task.getId());
             linkLast(task);
         }
@@ -35,16 +39,17 @@ public class InMemoryHistoryManager implements HistoryManager {
         final Node<Task> newNode = new Node<>(oldTail, element, null);
         tail = newNode;
         receivedTasks.put(element.getId(), newNode);
-        if (oldTail == null)
+        if (oldTail == null) {
             head = newNode;
-        else
+        } else {
             oldTail.next = newNode;
+        }
     }
 
     private List<Task> getTasks() {
         List<Task> tasks = new ArrayList<>();
         Node<Task> currentNode = head;
-        while (!(currentNode == null)) {
+        while (currentNode != null) {
             tasks.add(currentNode.data);
             currentNode = currentNode.next;
         }
@@ -52,38 +57,38 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     private void removeNode(Node<Task> node) {
-        if (!(node == null)) {
+        if (node != null) {
             final Node<Task> next = node.next;
             final Node<Task> prev = node.prev;
-            node.data = null;
-
-            if (head == node && tail == node) {
+            //Лучше не манипулировать с данными объекта, чтобы equals срабатывал корректно (удалил node.data = null)
+            if (head.equals(node) && tail.equals(node)) { //Объекты в java сравниваются только методом equals() т.к. "==" сравнивает ссылки
                 head = null;
                 tail = null;
-            } else if (head == node) {
+            } else if (head.equals(node)) {
                 head = next;
                 head.prev = null;
-            } else if (tail == node) {
+            } else if (tail.equals(node)) {
                 tail = prev;
                 tail.next = null;
             } else {
                 prev.next = next;
                 next.prev = prev;
             }
+            receivedTasks.remove(node);   //Нет удаления ноды из мапы (метод receivedTasks.remove()
+        }
+    }
 
+    private static class Node<Task> { // Лучше перенести класс в InMemoryHistoryManager с модификатором private static
+
+        public Task data;
+        public Node next; // Дженерики тут необязательны, так как у тебя data указана явно как Task
+        public Node prev;
+
+        public Node(Node prev, Task data, Node next) {
+            this.data = data;
+            this.next = next;
+            this.prev = prev;
         }
     }
 }
 
-class Node<Task> { // отдельный класс Node для узла списка
-
-    public Task data;
-    public Node<Task> next;
-    public Node<Task> prev;
-
-    public Node(Node<Task> prev, Task data, Node<Task> next) {
-        this.data = data;
-        this.next = next;
-        this.prev = prev;
-    }
-}
