@@ -8,9 +8,9 @@ import java.util.HashMap;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
-    private final HashMap<Integer, Node<Task>> receivedTasks = new HashMap<>();
-    private Node<Task> head;
-    private Node<Task> tail;
+    private final HashMap<Integer, Node> receivedTasks = new HashMap<>();
+    private Node head;
+    private Node tail;
 
     @Override
     public void addToHistory(Task task) {
@@ -32,8 +32,8 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     private void linkLast(Task element) {
-        final Node<Task> oldTail = tail;
-        final Node<Task> newNode = new Node<>(oldTail, element, null);
+        final Node oldTail = tail;
+        final Node newNode = new Node(oldTail, element, null);
         tail = newNode;
         receivedTasks.put(element.getId(), newNode);
         if (oldTail == null) {
@@ -45,7 +45,7 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     private List<Task> getTasks() {
         List<Task> tasks = new ArrayList<>();
-        Node<Task> currentNode = head;
+        Node currentNode = head;
         while (currentNode != null) {
             tasks.add(currentNode.data);
             currentNode = currentNode.next;
@@ -53,10 +53,10 @@ public class InMemoryHistoryManager implements HistoryManager {
         return tasks;
     }
 
-    private void removeNode(Node<Task> node) {
+    private void removeNode(Node node) {
         if (node != null) {
-            final Node<Task> next = node.next;
-            final Node<Task> prev = node.prev;
+            final Node next = node.next;
+            final Node prev = node.prev;
             //Лучше не манипулировать с данными объекта, чтобы equals срабатывал корректно (удалил node.data = null)
             if (head.equals(node) && tail.equals(node)) { //Объекты в java сравниваются только методом equals() т.к. "==" сравнивает ссылки
                 head = null;
@@ -71,11 +71,11 @@ public class InMemoryHistoryManager implements HistoryManager {
                 prev.next = next;
                 next.prev = prev;
             }
-            receivedTasks.remove(node);   //Нет удаления ноды из мапы (метод receivedTasks.remove()
+            receivedTasks.remove(node.data.getId());   //Нет удаления ноды из мапы (метод receivedTasks.remove()
         }
     }
 
-    private static class Node<Task> { // Лучше перенести класс в InMemoryHistoryManager с модификатором private static
+    private static class Node { // Лучше перенести класс в InMemoryHistoryManager с модификатором private static
 
         public Task data;
         public Node next; // Дженерики тут необязательны, так как у тебя data указана явно как Task
