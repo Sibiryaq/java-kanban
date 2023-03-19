@@ -1,9 +1,10 @@
-import logic.Managers;
-import logic.TaskManager;
+import Managers.Managers;
+import Managers.TaskManager;
 
-import tasks.Epic;
-import tasks.Subtask;
-import tasks.Task;
+import TaskStatus.TaskStatus;
+import Tasks.Epic;
+import Tasks.Subtask;
+import Tasks.Task;
 
 public class Main {
     public static void main(String[] args) {
@@ -11,34 +12,34 @@ public class Main {
         TaskManager manager = Managers.getDefault();
 
      /*
-      создайте две задачи, эпик с тремя подзадачами и эпик без подзадач:
+      Спринт 5. создайте две задачи, эпик с тремя подзадачами и эпик без подзадач:
      */
-        manager.taskCreator(new Task("Задача №1", "Описание задачи 1")); //1
-        manager.taskCreator(new Task("Задача №2", "Описание задачи 2")); //2
+        manager.taskCreator(new Task("Задача №1", "Описание задачи 1", TaskStatus.TaskStatus.valueOf(params[3].toUpperCase()))); //1
+        manager.taskCreator(new Task("Задача №2", "Описание задачи 2", TaskStatus.TaskStatus.valueOf(params[3].toUpperCase()))); //2
 
-        Epic epic1 = new Epic("Эпик №1", "С тремя подзадачами"); //3
+        Epic epic1 = new Epic("Эпик №1", "С тремя подзадачами", TaskStatus.valueOf(params[3].toUpperCase())); //3
         manager.epicCreator(epic1);
 
-        Subtask subtask11 = new Subtask("Подзадача № 1", "Описание подзадачи 1", 3); //4
+        Subtask subtask11 = new Subtask("Подзадача № 1", "Описание подзадачи 1", TaskStatus.TaskStatus.valueOf(params[3].toUpperCase()), 3); //4
         manager.subtaskCreator(subtask11);
-        Subtask subtask12 = new Subtask("Подзадача № 2", "Описание подзадачи 2", 3); //5
+        Subtask subtask12 = new Subtask("Подзадача № 2", "Описание подзадачи 2", TaskStatus.TaskStatus.valueOf(params[3].toUpperCase()), 3); //5
         manager.subtaskCreator(subtask12);
-        Subtask subtask13 = new Subtask("Подзадача № 3", "Описание подзадачи 3", 3); //6
+        Subtask subtask13 = new Subtask("Подзадача № 3", "Описание подзадачи 3", TaskStatus.TaskStatus.valueOf(params[3].toUpperCase()), 3); //6
         manager.subtaskCreator(subtask13);
 
 
-        Epic epic2 = new Epic("Эпик №2", "Без подзадач"); //7
+        Epic epic2 = new Epic("Эпик №2", "Без подзадач", TaskStatus.TaskStatus.valueOf(params[3].toUpperCase())); //7
         manager.epicCreator(epic2);
 
      /*
-      Для проверки создания выведем все виды задач:
+      Спринт 5. Для проверки создания выведем все виды задач:
      */
         System.out.println("\n Cозданные Эпики : \n" + manager.getEpics());
         System.out.println("\n Созданные Задачи : \n" + manager.getTasks());
         System.out.println("\n Созданные Подзадачи : \n" + manager.getSubtasks());
 
      /*
-       запросите созданные задачи несколько раз в разном порядке,
+       Спринт 5. запросите созданные задачи несколько раз в разном порядке,
        после каждого запроса выведите историю и убедитесь, что в ней нет повторов:
      */
         System.out.println("\n Запрос рандомной задачи : \n" + manager.getTaskById(1));
@@ -56,7 +57,7 @@ public class Main {
 
 
      /*
-      удалите задачу, которая есть в истории, и проверьте, что при печати она не будет выводиться:
+      Спринт 5. удалите задачу, которая есть в истории, и проверьте, что при печати она не будет выводиться:
      */
         System.out.println("Удалим задачу, которая есть в истории: ");
         manager.deleteTask(1);
@@ -64,7 +65,7 @@ public class Main {
         System.out.println("Показать историю : \n" + manager.history());
 
      /*
-      удалите эпик с тремя подзадачами
+        Спринт 5.  удалите эпик с тремя подзадачами
      */
         System.out.println("Удалим эпик с тремя подзадачами: ");
         manager.deleteEpic(3);
@@ -73,7 +74,7 @@ public class Main {
         manager.deleteSubtask(6);
 
      /*
-      убедитесь, что из истории удалился как сам эпик, так и все его подзадачи
+        Спринт 5. убедитесь, что из истории удалился как сам эпик, так и все его подзадачи
      */
         System.out.println("\n Показать историю : \n" + manager.history());
 

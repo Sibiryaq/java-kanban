@@ -1,4 +1,4 @@
-package logic;
+package Managers;
 
 public class Managers {
 

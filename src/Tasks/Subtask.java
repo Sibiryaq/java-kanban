@@ -1,10 +1,12 @@
-package tasks;
+package Tasks;
+
+import TaskStatus.TaskStatus;
 
 public class Subtask extends Task {
     private int idEpic;
 
-    public Subtask(String title, String description, int idEpic) {
-        super(title, description);
+    public Subtask(String title, String description, TaskStatus taskStatus, int idEpic) {
+        super(title, description, TaskStatus.TaskStatus.valueOf(params[3].toUpperCase()));
         this.idEpic = idEpic;
     }
 

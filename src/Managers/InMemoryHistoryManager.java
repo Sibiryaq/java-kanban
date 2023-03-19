@@ -1,6 +1,6 @@
-package logic;
+package Managers;
 
-import tasks.Task;
+import Tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;

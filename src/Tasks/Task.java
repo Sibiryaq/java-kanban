@@ -1,6 +1,6 @@
-package tasks;
+package Tasks;
 
-import logic.TaskStatus;
+import TaskStatus.TaskStatus;
 
 import java.util.Objects;
 
@@ -10,7 +10,7 @@ public class Task {
     protected int id;
     protected TaskStatus status;
 
-    public Task(String title, String description) {
+    public Task(String title, String description, TaskStatus taskStatus) {
         this.title = title;
         this.description = description;
     }

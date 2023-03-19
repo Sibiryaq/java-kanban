@@ -1,6 +1,7 @@
-package logic;
+package Managers;
 
-import tasks.*;
+import TaskStatus.TaskStatus;
+import Tasks.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +13,11 @@ public class InMemoryTaskManager implements TaskManager {
     private final HashMap<Integer, Task> taskHashMap = new HashMap<>();
     private final HashMap<Integer, Epic> epicHashMap = new HashMap<>();
     private final HashMap<Integer, Subtask> subtaskHashMap = new HashMap<>();
-    private final HistoryManager historyManager = Managers.getDefaultHistory();
+    private final HistoryManager historyManager;
+
+    public InMemoryTaskManager(HistoryManager historyManager) {
+        this.historyManager = historyManager;
+    }
 
     @Override
     public void taskCreator(Task task) {

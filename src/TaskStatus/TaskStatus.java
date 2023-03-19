@@ -1,4 +1,4 @@
-package logic;
+package TaskStatus;
 
 public enum TaskStatus {
     NEW,
