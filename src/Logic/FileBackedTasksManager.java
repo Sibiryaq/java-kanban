@@ -1,7 +1,7 @@
 package Logic;
 
 import Exceptions.*;
-import tasks.*;
+import Tasks.*;
 
 import java.io.File;
 import java.io.FileWriter;

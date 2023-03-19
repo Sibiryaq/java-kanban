@@ -1,6 +1,6 @@
 package Logic;
 
-import tasks.Task;
+import Tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;

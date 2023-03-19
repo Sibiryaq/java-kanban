@@ -3,9 +3,7 @@ import Logic.Managers;
 import Logic.TaskManager;
 
 import Logic.TaskStatus;
-import tasks.Epic;
-import tasks.Subtask;
-import tasks.Task;
+import Tasks.*;
 
 import java.io.File;
 
@@ -17,10 +15,6 @@ public class Main {
 
         TaskManager fileBackedTasksManager = FileBackedTasksManager.loadFromFile(new File("data/data.csv"));
 
-
-
-
-        
      /*
      5 спринт. создайте две задачи, эпик с тремя подзадачами и эпик без подзадач:
      */

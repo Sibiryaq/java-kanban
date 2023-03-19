@@ -1,4 +1,4 @@
-package tasks;
+package Tasks;
 
 import Logic.TaskStatus;
 import Logic.TaskType;
