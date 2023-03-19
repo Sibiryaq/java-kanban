@@ -1,19 +1,39 @@
-package Tasks;
+package tasks;
 
-import TaskStatus.TaskStatus;
+import Logic.TaskStatus;
+import Logic.TaskType;
 
 import java.util.ArrayList;
 
 public class Epic extends Task {
-    private final ArrayList<Integer> subtaskIdList;
+    private ArrayList<Integer> subtaskIdList;
 
-    public Epic(String title, String description, TaskStatus taskStatus) {
-        super(title, description, TaskStatus.TaskStatus.valueOf(params[3].toUpperCase()));
+    public Epic(String title, String description) {
+        super(title, description, null);
         subtaskIdList = new ArrayList<>();
+        this.taskType = TaskType.EPIC;
+    }
+
+    public Epic(int id, String title, String description) {
+        super(id, title, description, null);
+        subtaskIdList = new ArrayList<>();
+        this.taskType = TaskType.EPIC;
+    }
+
+    public Epic(int id, String title, TaskStatus status, String description) {
+        super(id, title, description, null);
+        subtaskIdList = new ArrayList<>();
+        this.taskType = TaskType.EPIC;
+        this.status = status;
+
     }
 
     public ArrayList<Integer> getSubtaskIdList() {
         return subtaskIdList;
+    }
+
+    public void setSubtaskIdList(ArrayList<Integer> subtaskIdList) {
+        this.subtaskIdList = subtaskIdList;
     }
 
     @Override

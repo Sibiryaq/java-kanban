@@ -1,18 +1,33 @@
-package Tasks;
+package tasks;
 
-import TaskStatus.TaskStatus;
-
-import java.util.Objects;
+import Logic.TaskStatus;
+import Logic.TaskType;
 
 public class Task {
     protected String title;
     protected String description;
     protected int id;
     protected TaskStatus status;
+    protected TaskType taskType;
 
-    public Task(String title, String description, TaskStatus taskStatus) {
+    public Task(String title, String description) {
         this.title = title;
         this.description = description;
+    }
+
+    public Task(String title, String description, TaskStatus status) {
+        this.title = title;
+        this.description = description;
+        this.status = status;
+        this.taskType = TaskType.TASK;
+    }
+
+    public Task(int id, String title, String description, TaskStatus status) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.status = status;
+        this.taskType = TaskType.TASK;
     }
 
     public int getId() {
@@ -37,23 +52,11 @@ public class Task {
                 + "\", Название задачи=\"" + title
                 + "\", Описание=\"" + description
                 + "\", Статус=\"" + status + "\""
+                + '}'
                 + "\n";
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Task task = (Task) o;
-        return id == task.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public String toStringFromFile() {
+        return String.format("%s,%s,%s,%s,%s,%s", id, taskType, title, status, description, "");
     }
 }

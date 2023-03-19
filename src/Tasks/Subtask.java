@@ -1,21 +1,38 @@
-package Tasks;
+package tasks;
 
-import TaskStatus.TaskStatus;
+import Logic.TaskStatus;
+import Logic.TaskType;
 
 public class Subtask extends Task {
-    private int idEpic;
+    private Epic epic;
 
-    public Subtask(String title, String description, TaskStatus taskStatus, int idEpic) {
-        super(title, description, TaskStatus.TaskStatus.valueOf(params[3].toUpperCase()));
-        this.idEpic = idEpic;
+    public Subtask(String title, String description, Epic epic) {
+        super(title, description);
+        this.epic = epic;
     }
 
-    public int getIdEpic() {
-        return idEpic;
+    public Subtask(String title, String description, TaskStatus status) {
+        super(title, description, status);
     }
 
-    public void setIdEpic(int idEpic) {
-        this.idEpic = idEpic;
+    public Subtask(String title, String description, TaskStatus status, Epic epic) {
+        super(title, description, status);
+        this.epic = epic;
+        this.taskType = TaskType.SUBTASK;
+    }
+
+    public Subtask(int id, String title, String description, TaskStatus status, Epic epic) {
+        super(id, title, description, status);
+        this.epic = epic;
+        this.taskType = TaskType.SUBTASK;
+    }
+
+    public Epic getEpic() {
+        return epic;
+    }
+
+    public void setEpic(Epic epic) {
+        this.epic = epic;
     }
 
     @Override
@@ -23,8 +40,12 @@ public class Subtask extends Task {
         return "ID подзадачи Subtask=\"" + id
                 + "\", Название подзадачи=\"" + title
                 + "\", Описание=\"" + description
-                + "\", Находится в эпике с идентификатором=\"" + idEpic
                 + "\", Статус=\"" + status + "\""
                 + "\n";
+    }
+
+    @Override
+    public String toStringFromFile() {
+        return String.format("%s,%s,%s,%s,%s,%s", id, taskType, title, status, description, epic.getId());
     }
 }

@@ -1,6 +1,6 @@
-package Managers;
+package Logic;
 
-import Tasks.Task;
+import tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,11 +14,11 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void addToHistory(Task task) {
-            // Лучше перед удалением проверить, есть ли такой узел в мапе
-            if (receivedTasks.containsKey(task.getId())) {
-                remove(task.getId());
-            }
-            linkLast(task);
+        // Лучше перед удалением проверить, есть ли такой узел в мапе
+        if (receivedTasks.containsKey(task.getId())) {
+            remove(task.getId());
+        }
+        linkLast(task);
     }
 
     @Override
@@ -32,13 +32,15 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     private void linkLast(Task element) {
-        Node newNode = new Node(tail, element, null);
+        final Node oldTail = tail;
+        final Node newNode = new Node(oldTail, element, null);
         tail = newNode;
         receivedTasks.put(element.getId(), newNode);
-        if (newNode.prev == null)
+        if (oldTail == null) {
             head = newNode;
-        else
-            newNode.prev.next = newNode;
+        } else {
+            oldTail.next = newNode;
+        }
     }
 
     private List<Task> getTasks() {
