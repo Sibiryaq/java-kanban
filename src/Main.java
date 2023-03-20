@@ -1,20 +1,13 @@
-import Logic.FileBackedTasksManager;
 import Logic.Managers;
 import Logic.TaskManager;
 
 import Logic.TaskStatus;
 import Tasks.*;
 
-import java.io.File;
-
 public class Main {
     public static void main(String[] args) {
 
         TaskManager manager = Managers.getDefault();
-
-
-        TaskManager fileBackedTasksManager = FileBackedTasksManager.loadFromFile(new File("data/data.csv"));
-
      /*
      5 спринт. создайте две задачи, эпик с тремя подзадачами и эпик без подзадач:
      */
@@ -31,17 +24,14 @@ public class Main {
         Subtask subtask13 = new Subtask("Подзадача № 3", "Описание подзадачи 3", TaskStatus.NEW, epic1); //6
         manager.subtaskCreator(subtask13);
 
-
         Epic epic2 = new Epic("Эпик №2", "Без подзадач"); //7
         manager.epicCreator(epic2);
-
      /*
      5 спринт. Для проверки создания выведем все виды задач:
      */
         System.out.println("\n Cозданные Эпики : \n" + manager.getEpics());
         System.out.println("\n Созданные Задачи : \n" + manager.getTasks());
         System.out.println("\n Созданные Подзадачи : \n" + manager.getSubtasks());
-
      /*
      5 спринт.  запросите созданные задачи несколько раз в разном порядке,
        после каждого запроса выведите историю и убедитесь, что в ней нет повторов:
@@ -58,8 +48,6 @@ public class Main {
         System.out.println("Показать историю : \n" + manager.history());
         System.out.println("\nЗапрос рандомной задачи : \n" + manager.getSubtaskById(4)); //второй раз, для проверки дублирования
         System.out.println("Показать историю : \n" + manager.history());
-
-
      /*
      5 спринт. удалите задачу, которая есть в истории, и проверьте, что при печати она не будет выводиться:
      */
@@ -67,7 +55,6 @@ public class Main {
         manager.deleteTask(1);
         System.out.println("Проверим не осталась ли она в истории: ");
         System.out.println("Показать историю : \n" + manager.history());
-
      /*
      5 спринт. удалите эпик с тремя подзадачами
      */
@@ -76,7 +63,6 @@ public class Main {
         manager.deleteSubtask(4);
         manager.deleteSubtask(5);
         manager.deleteSubtask(6);
-
      /*
      5 спринт.  убедитесь, что из истории удалился как сам эпик, так и все его подзадачи
      */
