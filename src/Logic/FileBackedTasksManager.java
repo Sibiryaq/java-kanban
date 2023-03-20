@@ -14,14 +14,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class FileBackedTasksManager extends InMemoryTaskManager { //6/ класс для второй реализация менеджера, автосохранение в файл
+public class FileBackedTasksManager extends InMemoryTaskManager { //спринт 6. класс для второй реализации менеджера, автосохранение в файл
     private final File file;
 
     //Метод для проверки работы менеджера
     public static void main(String[] args) {
-        FileBackedTasksManager manager =  new FileBackedTasksManager(new File("data/data.csv"));
+        FileBackedTasksManager manager = new FileBackedTasksManager(new File("data/data.csv"));
         FileBackedTasksManager manager1;
-        
 
         //Заведение нескольких разных задач, эпиков и подзадач.
         manager.taskCreator(new Task("Задача №1", "Описание задачи 1", TaskStatus.NEW));
@@ -36,7 +35,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //6/ клас�
         manager.subtaskCreator(subtask12);
         Subtask subtask13 = new Subtask("Подзадача № 3", "Описание подзадачи 3", TaskStatus.NEW, epic1);
         manager.subtaskCreator(subtask13);
-
 
         Epic epic2 = new Epic("Эпик №2", "Без подзадач"); //7
         manager.epicCreator(epic2);
@@ -60,10 +58,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //6/ клас�
 
         System.out.println("\n----------Создание второго менеджера на основе файла первого экземпляра.");
 
-      //  Создание нового FileBackedTasksManager менеджера из этого же файла.
+        // Создание нового FileBackedTasksManager менеджера из этого же файла.
         manager1 = loadFromFile(Paths.get("data/data.csv").toFile());
 
-      //  Вывод списка задач
+        // Вывод списка задач
         System.out.println("\n Cозданные Эпики : \n" + manager1.getEpics());
         System.out.println("\n Созданные Задачи : \n" + manager1.getTasks());
         System.out.println("\n Созданные Подзадачи : \n" + manager1.getSubtasks());
@@ -345,6 +343,5 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //6/ клас�
         super.deleteEpicList();
         save();
     }
-
-
+    
 }

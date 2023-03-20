@@ -43,12 +43,6 @@ public interface TaskManager {
 
     void updateEpic(Epic epic);
 
-    boolean checkStatus(TaskStatus tStatus, Epic epic);
-
-    void updateStatusEpic(Epic epic);
-
-    ArrayList<Subtask> getAllSubtasks(Epic epic);
-
     List<Task> history();
 
 }

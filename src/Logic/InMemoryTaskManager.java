@@ -83,7 +83,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(int id) {
-        Task idTask = taskHashMap.get(id); //idTask или task как логичнее?
+        Task idTask = taskHashMap.get(id); //idTask или task, как логичнее?
         historyManager.addToHistory(idTask);
         return idTask;
     }
@@ -130,7 +130,7 @@ public class InMemoryTaskManager implements TaskManager {
             Epic epic = epicHashMap.get(id);
             epicHashMap.remove(id);
             historyManager.remove(id);
-            for (Integer subtask : epic.getSubtaskIdList()) { //int или Integer?
+            for (Integer subtask : epic.getSubtaskIdList()) {
                 subtaskHashMap.remove(subtask);
                 historyManager.remove(subtask);
             }
@@ -160,42 +160,9 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean checkStatus(TaskStatus status, Epic epic) {
-        for (int subtaskId : epic.getSubtaskIdList()) {
-            if (!Objects.equals(subtaskHashMap.get(subtaskId).getStatus(), status)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
-    public void updateStatusEpic(Epic epic) {
-        if (epic.getSubtaskIdList().isEmpty() || checkStatus(TaskStatus.NEW, epic)) {
-            epic.setStatus(TaskStatus.NEW);
-            return;
-        } else if (checkStatus(TaskStatus.DONE, epic)) {
-            epic.setStatus(TaskStatus.DONE);
-        } else {
-            epic.setStatus(TaskStatus.IN_PROGRESS);
-        }
-
-    }
-
-    @Override
-    public ArrayList<Subtask> getAllSubtasks(Epic epic) {
-        ArrayList<Subtask> subtaskArrayList = new ArrayList<>();
-        for (int id : epic.getSubtaskIdList()) {
-            subtaskArrayList.add(subtaskHashMap.get(id));
-        }
-        return subtaskArrayList;
-    }
-
-    @Override
     public List<Task> history() {
         return historyManager.getHistory();
     }
-
 
     private void calcEpicStatus(Epic epic) {
 
