@@ -17,6 +17,20 @@ import java.util.List;
 public class FileBackedTasksManager extends InMemoryTaskManager { //спринт 6. класс для второй реализации менеджера, автосохранение в файл
     private final File file;
 
+    public FileBackedTasksManager(File file) {
+        this.file = file;
+
+        String fileName = "./data/data.csv";
+        file = new File(fileName);
+        if (!file.isFile()) {
+            try {
+                Path path = Files.createFile(Paths.get(fileName));
+            } catch (IOException e) {
+                throw new ManagerCreateException("Ошибка создания файла.");
+            }
+        }
+    }
+
     //Метод для проверки работы менеджера
     public static void main(String[] args) {
         FileBackedTasksManager manager = new FileBackedTasksManager(new File("data/data.csv"));
@@ -70,20 +84,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //спринт
         System.out.println("Показать историю : \n" + manager1.history());
     }
 
-    public FileBackedTasksManager(File file) {
-        this.file = file;
-
-        String fileName = "./data/data.csv";
-        file = new File(fileName);
-        if (!file.isFile()) {
-            try {
-                Path path = Files.createFile(Paths.get(fileName));
-            } catch (IOException e) {
-                throw new ManagerCreateException("Ошибка создания файла.");
-            }
-        }
-    }
-
     public static FileBackedTasksManager loadFromFile(File file) {
 
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
@@ -123,6 +123,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //спринт
                                 maxId = id;
                             }
                             fileBackedTasksManager.epicHashMap.put(id, epic);
+                            epics.add(line);
                         }
                         break;
 
@@ -134,6 +135,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //спринт
                                 maxId = id;
                             }
                             fileBackedTasksManager.subtaskHashMap.put(id, subtask);
+                            subtasks.add(line);
                         }
                         break;
 
@@ -146,6 +148,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //спринт
                                 maxId = id;
                             }
                             fileBackedTasksManager.taskHashMap.put(id, task);
+                            tasks.add(line);
                         }
                         break;
 
