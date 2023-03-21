@@ -1,11 +1,10 @@
-package Logic;
+package logic;
 
-import Tasks.*;
+import tasks.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 public class InMemoryTaskManager implements TaskManager {
     protected int idGenerator = 0;

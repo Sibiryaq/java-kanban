@@ -1,7 +1,7 @@
-package Tasks;
+package tasks;
 
-import Logic.TaskStatus;
-import Logic.TaskType;
+import logic.TaskStatus;
+import logic.TaskType;
 
 import java.util.ArrayList;
 

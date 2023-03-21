@@ -1,8 +1,8 @@
-import Logic.Managers;
-import Logic.TaskManager;
+import logic.Managers;
+import logic.TaskManager;
 
-import Logic.TaskStatus;
-import Tasks.*;
+import logic.TaskStatus;
+import tasks.*;
 
 public class Main {
     public static void main(String[] args) {

@@ -1,7 +1,7 @@
-package Logic;
+package logic;
 
-import Exceptions.*;
-import Tasks.*;
+import exceptions.*;
+import tasks.*;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -20,11 +20,18 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //спринт
     public FileBackedTasksManager(File file) {
         this.file = file;
 
-        String fileName = "./data/data.csv";
-        file = new File(fileName);
+        file = new File(file.toURI());
         if (!file.isFile()) {
+            // если убираю этот if сразу ошибками сыпет:
+            // Exception in thread "main" exceptions.ManagerCreateException: Ошибка создания файла.
+            // at logic.FileBackedTasksManager.<init>(FileBackedTasksManager.java:36)
+            // at logic.FileBackedTasksManager.main(FileBackedTasksManager.java:43)
+            // Мне кажется, что проверка не может быть удалена , т.к. она гарантирует,
+            // что файл не существует до создания нового файла, и если она удаляется, то метод
+            // будет пытаться создать файл каждый раз, когда он вызывается, даже если файл уже существует,
+            // что походу и приводило к вышеперечисленным ошибкам.
             try {
-                Path path = Files.createFile(Paths.get(fileName));
+                Path path = Files.createFile(Paths.get(file.toURI()));
             } catch (IOException e) {
                 throw new ManagerCreateException("Ошибка создания файла.");
             }
@@ -85,173 +92,77 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //спринт
     }
 
     public static FileBackedTasksManager loadFromFile(File file) {
-
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
-        String data = "";
         try {
+            String data = "";
             data = Files.readString(Path.of(file.getAbsolutePath()));
+            String[] lines = data.split("\n");
+            boolean isTitle = true;
+            boolean itsTask = true;
+            int maxId = 0;
+            int id;
+
+            for (String line : lines) {
+                if (isTitle) {
+                    isTitle = false;
+                    continue;
+                }
+                if (line.isEmpty() || line.equals("\r")) {
+                    itsTask = false;
+                    continue;
+                }
+                if (itsTask) {
+                    TaskType taskType = TaskType.valueOf(line.split(",")[1]);
+                    switch (taskType) {
+                        case EPIC:
+                            Epic epic = (Epic) fromString(line, TaskType.EPIC, fileBackedTasksManager);
+                            if (epic != null) {
+                                id = epic.getId();
+                                if (id > maxId) {
+                                    maxId = id;
+                                }
+                                fileBackedTasksManager.epicHashMap.put(id, epic);
+                            }
+                            break;
+
+                        case SUBTASK:
+                            Subtask subtask = (Subtask) fromString(line, TaskType.SUBTASK, fileBackedTasksManager);
+                            if (subtask != null) {
+                                id = subtask.getId();
+                                if (id > maxId) {
+                                    maxId = id;
+                                }
+                                fileBackedTasksManager.subtaskHashMap.put(id, subtask);
+                            }
+                            break;
+
+                        case TASK:
+                            Task task = fromString(line, TaskType.TASK, fileBackedTasksManager);
+
+                            if (task != null) {
+                                id = task.getId();
+                                if (id > maxId) {
+                                    maxId = id;
+                                }
+                                fileBackedTasksManager.taskHashMap.put(id, task);
+                            }
+                            break;
+
+                    }
+                } else {
+                    List<Integer> ids = fromString(line);
+                    for (Integer taskId : ids) {
+                        fileBackedTasksManager.historyManager.addToHistory(getTaskAllKind(taskId, fileBackedTasksManager));
+                    }
+                }
+            }
+            fileBackedTasksManager.idGenerator = maxId;
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка чтения файла.");
         }
-        String[] lines = data.split("\n");
-        List<String> epics = new ArrayList<>();
-        List<String> subtasks = new ArrayList<>();
-        List<String> tasks = new ArrayList<>();
-        String lineOfHistory = "";
-        boolean isTitle = true;
-        boolean itsTask = true;
-        int maxId = 0;
-        int id;
 
-        for (String line : lines) {
-            if (isTitle) {
-                isTitle = false;
-                continue;
-            }
-            if (line.isEmpty() || line.equals("\r")) {
-                itsTask = false;
-                continue;
-            }
-            if (itsTask) {
-                TaskType taskType = TaskType.valueOf(line.split(",")[1]);
-                switch (taskType) {
-                    case EPIC:
-                        Epic epic = (Epic) fromString(line, TaskType.EPIC, fileBackedTasksManager);
-                        if (epic != null) {
-                            id = epic.getId();
-                            if (id > maxId) {
-                                maxId = id;
-                            }
-                            fileBackedTasksManager.epicHashMap.put(id, epic);
-                            epics.add(line);
-                        }
-                        break;
 
-                    case SUBTASK:
-                        Subtask subtask = (Subtask) fromString(line, TaskType.SUBTASK, fileBackedTasksManager);
-                        if (subtask != null) {
-                            id = subtask.getId();
-                            if (id > maxId) {
-                                maxId = id;
-                            }
-                            fileBackedTasksManager.subtaskHashMap.put(id, subtask);
-                            subtasks.add(line);
-                        }
-                        break;
-
-                    case TASK:
-                        Task task = fromString(line, TaskType.TASK, fileBackedTasksManager);
-
-                        if (task != null) {
-                            id = task.getId();
-                            if (id > maxId) {
-                                maxId = id;
-                            }
-                            fileBackedTasksManager.taskHashMap.put(id, task);
-                            tasks.add(line);
-                        }
-                        break;
-
-                }
-            } else {
-                lineOfHistory = line;
-            }
-        }
-        fileBackedTasksManager.idGenerator = maxId;
-        List<Integer> ids = fromString(lineOfHistory);
-        for (Integer taskId : ids) {
-            fileBackedTasksManager.historyManager.addToHistory(getTaskAllKind(taskId, fileBackedTasksManager));
-        }
         return fileBackedTasksManager;
-    }
-
-    private static Task getTaskAllKind(int id, InMemoryTaskManager inMemoryTaskManager) {
-        Task task = inMemoryTaskManager.getTasks().get(id);
-        if (!(task == null)) {
-            return task;
-        }
-        Task epic = inMemoryTaskManager.getEpics().get(id);
-        if (!(epic == null)) {
-            return epic;
-        }
-        Task subtask = inMemoryTaskManager.getSubtasks().get(id);
-        if (!(subtask == null)) {
-            return subtask;
-        }
-        return null;
-    }
-
-    private static String toString(HistoryManager manager) {
-        List<String> s = new ArrayList<>();
-        for (Task task : manager.getHistory()) {
-            s.add(String.valueOf(task.getId()));
-        }
-        return String.join(",", s);
-    }
-
-    private static List<Integer> fromString(String value) {
-        String[] idsString = value.split(",");
-        List<Integer> tasksId = new ArrayList<>();
-        for (String idString : idsString) {
-            tasksId.add(Integer.valueOf(idString));
-        }
-        return tasksId;
-    }
-
-    private static Task fromString(String value, TaskType taskType, FileBackedTasksManager fileBackedTasksManager) {
-        String[] dataOfTask = value.split(",", 6);
-        int id = Integer.parseInt(dataOfTask[0]);
-        String name = dataOfTask[2];
-        TaskStatus status = TaskStatus.valueOf(dataOfTask[3]);
-        String description = dataOfTask[4];
-        String epicIdString = dataOfTask[5].trim();
-
-        switch (taskType) {
-            case TASK:
-                return new Task(id, name, description, status);
-            case EPIC:
-                return new Epic(id, name, status, description);
-            case SUBTASK:
-                return new Subtask(id, name, description, status, fileBackedTasksManager.epicHashMap.get(Integer.valueOf(epicIdString)));
-            default:
-                return null;
-        }
-    }
-
-    @Override
-    public List<Task> history() {
-        return super.history();
-    }
-
-    public void save() {
-        try (Writer writer = new FileWriter(file)) {
-            writer.write("id,type,name,status,description,epic\n");
-            HashMap<Integer, String> allTasks = new HashMap<>();
-
-            HashMap<Integer, Task> tasks = super.getTasks();
-            for (Integer id : tasks.keySet()) {
-                allTasks.put(id, tasks.get(id).toStringFromFile());
-            }
-
-            HashMap<Integer, Epic> epics = super.getEpics();
-            for (Integer id : epics.keySet()) {
-                allTasks.put(id, epics.get(id).toStringFromFile());
-            }
-
-            HashMap<Integer, Subtask> subtasks = super.getSubtasks();
-            for (Integer id : subtasks.keySet()) {
-                allTasks.put(id, subtasks.get(id).toStringFromFile());
-            }
-
-            for (String value : allTasks.values()) {
-                writer.write(String.format("%s\n", value));
-            }
-            writer.write("\n");
-            writer.write(toString(this.historyManager));
-
-        } catch (IOException e) {
-            throw new ManagerSaveException("Ошибка записи файла.");
-        }
     }
 
     @Override
@@ -346,5 +257,86 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //спринт
         super.deleteEpicList();
         save();
     }
-    
+
+    @Override
+    public List<Task> history() {
+        return super.history();
+    }
+
+    private void save() {
+        //Можно собрать все таски в мапу HashMap<Integer, Task> allTasks = new HashMap<>(); с помощью метода
+        //allTasks.putAll(), а потом уже в цикле преобразовать все вместе в стрингу
+        try (Writer writer = new FileWriter(file)) {
+            writer.write("id,type,name,status,description,epic\n");
+            HashMap<Integer, Task> allTasks = new HashMap<>();
+
+            allTasks.putAll(super.getTasks());
+            allTasks.putAll(super.getEpics());
+            allTasks.putAll(super.getSubtasks());
+
+            for (Task task : allTasks.values()) {
+                writer.write(String.format("%s\n", task.toStringFromFile()));
+            }
+            writer.write("\n");
+            writer.write(toString(this.historyManager));
+
+        } catch (IOException e) {
+            throw new ManagerSaveException("Ошибка записи файла.");
+        }
+    }
+
+    private static Task getTaskAllKind(int id, InMemoryTaskManager inMemoryTaskManager) {
+        Task task = inMemoryTaskManager.getTasks().get(id);
+        if (!(task == null)) {
+            return task;
+        }
+        Task epic = inMemoryTaskManager.getEpics().get(id);
+        if (!(epic == null)) {
+            return epic;
+        }
+        Task subtask = inMemoryTaskManager.getSubtasks().get(id);
+        if (!(subtask == null)) {
+            return subtask;
+        }
+        return null;
+    }
+
+    private static String toString(HistoryManager manager) {
+        List<String> s = new ArrayList<>();
+        for (Task task : manager.getHistory()) {
+            s.add(String.valueOf(task.getId()));
+        }
+        return String.join(",", s);
+    }
+
+    private static List<Integer> fromString(String value) {
+        String[] idsString = value.split(",");
+        List<Integer> tasksId = new ArrayList<>();
+        for (String idString : idsString) {
+            tasksId.add(Integer.valueOf(idString));
+        }
+        return tasksId;
+    }
+
+    private static Task fromString(String value, TaskType taskType, FileBackedTasksManager fileBackedTasksManager) {
+        String[] dataOfTask = value.split(",", 6);
+        int id = Integer.parseInt(dataOfTask[0]);
+        String name = dataOfTask[2];
+        TaskStatus status = TaskStatus.valueOf(dataOfTask[3]);
+        String description = dataOfTask[4];
+        String epicIdString = dataOfTask[5].trim();
+
+        switch (taskType) {
+            case TASK:
+                return new Task(id, name, description, status);
+            case EPIC:
+                return new Epic(id, name, status, description);
+            case SUBTASK:
+                return new Subtask(id, name, description, status, fileBackedTasksManager.epicHashMap.get(Integer.valueOf(epicIdString)));
+            default:
+                return null;
+        }
+    }
+
+
 }
