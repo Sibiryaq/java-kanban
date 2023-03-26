@@ -19,14 +19,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //спринт
 
     public FileBackedTasksManager(File file) {
         this.file = file;
-
-        if (!file.isFile()) {
-            try {
-                Path path = Files.createFile(Paths.get(file.toURI()));
-            } catch (IOException e) {
-                throw new ManagerCreateException("Ошибка создания файла.");
-            }
-        }
     }
 
     //Метод для проверки работы менеджера
@@ -103,42 +95,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //спринт
                 }
                 if (itsTask) {
                     TaskType taskType = TaskType.valueOf(line.split(",")[1]);
-                    switch (taskType) {
-                        case EPIC:
-                            Epic epic = (Epic) fromString(line, TaskType.EPIC, fileBackedTasksManager);
-                            if (epic != null) {
-                                id = epic.getId();
-                                if (id > maxId) {
-                                    maxId = id;
-                                }
-                                fileBackedTasksManager.epicHashMap.put(id, epic);
-                            }
-                            break;
-
-                        case SUBTASK:
-                            Subtask subtask = (Subtask) fromString(line, TaskType.SUBTASK, fileBackedTasksManager);
-                            if (subtask != null) {
-                                id = subtask.getId();
-                                if (id > maxId) {
-                                    maxId = id;
-                                }
-                                fileBackedTasksManager.subtaskHashMap.put(id, subtask);
-                            }
-                            break;
-
-                        case TASK:
-                            Task task = fromString(line, TaskType.TASK, fileBackedTasksManager);
-
-                            if (task != null) {
-                                id = task.getId();
-                                if (id > maxId) {
-                                    maxId = id;
-                                }
-                                fileBackedTasksManager.taskHashMap.put(id, task);
-                            }
-                            break;
-
-                    }
+                    setTask(taskType, line, maxId, fileBackedTasksManager); // p.s. СПАСИБО ОГРОМНОЕ!!!
                 } else {
                     List<Integer> ids = fromString(line);
                     for (Integer taskId : ids) {
@@ -154,6 +111,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //спринт
 
         return fileBackedTasksManager;
     }
+
 
     @Override
     public void taskCreator(Task task) {
@@ -324,6 +282,42 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //спринт
             default:
                 return null;
         }
+    }
+
+    private static Integer setTask(TaskType taskType, String line, int maxId, FileBackedTasksManager fileBackedTasksManager) {
+        switch (taskType) { // p.s. СПАСИБО ОГРОМНОЕ!!!
+            case EPIC:
+                Epic epic = (Epic) fromString(line, TaskType.EPIC, fileBackedTasksManager);
+                if (epic != null) {
+                    int id = epic.getId();
+                    if (id > maxId) {
+                        maxId = id;
+                    }
+                    fileBackedTasksManager.epicHashMap.put(id, epic);
+                }
+                break;
+            case SUBTASK:
+                Subtask subtask = (Subtask) fromString(line, TaskType.SUBTASK, fileBackedTasksManager);
+                if (subtask != null) {
+                    int id = subtask.getId();
+                    if (id > maxId) {
+                        maxId = id;
+                    }
+                    fileBackedTasksManager.subtaskHashMap.put(id, subtask);
+                }
+                break;
+            case TASK:
+                Task task = fromString(line, TaskType.TASK, fileBackedTasksManager);
+                if (task != null) {
+                    int id = task.getId();
+                    if (id > maxId) {
+                        maxId = id;
+                    }
+                    fileBackedTasksManager.taskHashMap.put(id, task);
+                }
+                break;
+        }
+        return maxId;
     }
 
 
