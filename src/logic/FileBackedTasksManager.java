@@ -20,16 +20,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //спринт
     public FileBackedTasksManager(File file) {
         this.file = file;
 
-        file = new File(file.toURI());
         if (!file.isFile()) {
-            // если убираю этот if сразу ошибками сыпет:
-            // Exception in thread "main" exceptions.ManagerCreateException: Ошибка создания файла.
-            // at logic.FileBackedTasksManager.<init>(FileBackedTasksManager.java:36)
-            // at logic.FileBackedTasksManager.main(FileBackedTasksManager.java:43)
-            // Мне кажется, что проверка не может быть удалена , т.к. она гарантирует,
-            // что файл не существует до создания нового файла, и если она удаляется, то метод
-            // будет пытаться создать файл каждый раз, когда он вызывается, даже если файл уже существует,
-            // что походу и приводило к вышеперечисленным ошибкам.
             try {
                 Path path = Files.createFile(Paths.get(file.toURI()));
             } catch (IOException e) {
@@ -94,8 +85,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //спринт
     public static FileBackedTasksManager loadFromFile(File file) {
         FileBackedTasksManager fileBackedTasksManager = new FileBackedTasksManager(file);
         try {
-            String data = "";
-            data = Files.readString(Path.of(file.getAbsolutePath()));
+            String data = Files.readString(Path.of(file.getAbsolutePath()));
             String[] lines = data.split("\n");
             boolean isTitle = true;
             boolean itsTask = true;
@@ -264,8 +254,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //спринт
     }
 
     private void save() {
-        //Можно собрать все таски в мапу HashMap<Integer, Task> allTasks = new HashMap<>(); с помощью метода
-        //allTasks.putAll(), а потом уже в цикле преобразовать все вместе в стрингу
         try (Writer writer = new FileWriter(file)) {
             writer.write("id,type,name,status,description,epic\n");
             HashMap<Integer, Task> allTasks = new HashMap<>();
