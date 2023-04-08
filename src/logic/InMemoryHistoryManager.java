@@ -14,7 +14,6 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void addToHistory(Task task) {
-        // Лучше перед удалением проверить, есть ли такой узел в мапе
         if (receivedTasks.containsKey(task.getId())) {
             remove(task.getId());
         }
@@ -57,8 +56,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (node != null) {
             final Node next = node.next;
             final Node prev = node.prev;
-            //Лучше не манипулировать с данными объекта, чтобы equals срабатывал корректно (удалил node.data = null)
-            if (head.equals(node) && tail.equals(node)) { //Объекты в java сравниваются только методом equals() т.к. "==" сравнивает ссылки
+            if (head.equals(node) && tail.equals(node)) {
                 head = null;
                 tail = null;
             } else if (head.equals(node)) {
@@ -71,14 +69,14 @@ public class InMemoryHistoryManager implements HistoryManager {
                 prev.next = next;
                 next.prev = prev;
             }
-            receivedTasks.remove(node.data.getId());   //Нет удаления ноды из мапы (метод receivedTasks.remove()
+            receivedTasks.remove(node.data.getId());
         }
     }
 
-    private static class Node { // Лучше перенести класс в InMemoryHistoryManager с модификатором private static
+    private static class Node {
 
         public Task data;
-        public Node next; // Дженерики тут необязательны, так как у тебя data указана явно как Task
+        public Node next;
         public Node prev;
 
         public Node(Node prev, Task data, Node next) {

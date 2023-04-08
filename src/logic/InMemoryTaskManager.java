@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
-    protected int idGenerator = 0;
+    protected int id = 0;
     protected HashMap<Integer, Task> taskHashMap = new HashMap<>();
     protected HashMap<Integer, Epic> epicHashMap = new HashMap<>();
     protected HashMap<Integer, Subtask> subtaskHashMap = new HashMap<>();
@@ -15,17 +15,13 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void taskCreator(Task task) {
-        int id = ++idGenerator;
-        task.setId(id);
-        task.setStatus(TaskStatus.NEW);
+        task.setId(++id);
         taskHashMap.put(id, task);
     }
 
     @Override
     public void subtaskCreator(Subtask subtask) {
-        int id = ++idGenerator;
-        subtask.setId(id);
-        subtask.setStatus(TaskStatus.NEW);
+        subtask.setId(++id);
         subtaskHashMap.put(id, subtask);
         subtask.getEpic().getSubtaskIdList().add(id);
         calcEpicStatus(subtask.getEpic());
@@ -33,8 +29,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void epicCreator(Epic epic) {
-        int id = ++idGenerator;
-        epic.setId(id);
+        epic.setId(++id);
         epic.setStatus(TaskStatus.NEW);
         epicHashMap.put(id, epic);
     }
@@ -82,23 +77,32 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task getTaskById(int id) {
-        Task idTask = taskHashMap.get(id); //idTask или task, как логичнее?
-        historyManager.addToHistory(idTask);
-        return idTask;
+        if (taskHashMap.containsKey(id)) {
+            historyManager.addToHistory(taskHashMap.get(id));
+            return taskHashMap.get(id);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public Subtask getSubtaskById(int id) {
-        Subtask idSub = subtaskHashMap.get(id); //может = subtasks.getOrDefault(id, null) ??
-        historyManager.addToHistory(idSub);
-        return idSub;
+        if (subtaskHashMap.containsKey(id)) {
+            historyManager.addToHistory(subtaskHashMap.get(id));
+            return subtaskHashMap.get(id);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public Epic getEpicById(int id) {
-        Epic idEpic = epicHashMap.get(id);  //может = epics.getOrDefault(id, null) ??
-        historyManager.addToHistory(idEpic);
-        return idEpic;
+        if (epicHashMap.containsKey(id)) {
+            historyManager.addToHistory(epicHashMap.get(id));
+            return epicHashMap.get(id);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -129,10 +133,11 @@ public class InMemoryTaskManager implements TaskManager {
             Epic epic = epicHashMap.get(id);
             epicHashMap.remove(id);
             historyManager.remove(id);
-            for (Integer subtask : epic.getSubtaskIdList()) {
-                subtaskHashMap.remove(subtask);
-                historyManager.remove(subtask);
+            for (Integer subtaskId : epic.getSubtaskIdList()) {
+                subtaskHashMap.remove(subtaskId);
+                historyManager.remove(subtaskId);
             }
+            epic.setSubtaskIdList(new ArrayList<>());
         }
     }
 
@@ -153,13 +158,15 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateEpic(Epic epic) {
-        epic.setSubtaskIdList(epicHashMap.get(epic.getId()).getSubtaskIdList());
-        epicHashMap.put(epic.getId(), epic);
-        calcEpicStatus(epic);
+        if (epicHashMap.containsKey(epic.getId())) {
+            epic.setSubtaskIdList(epicHashMap.get(epic.getId()).getSubtaskIdList());
+            epicHashMap.put(epic.getId(), epic);
+            calcEpicStatus(epic);
+        }
     }
 
     @Override
-    public List<Task> history() {
+    public List<Task> history() { //historyTest
         return historyManager.getHistory();
     }
 

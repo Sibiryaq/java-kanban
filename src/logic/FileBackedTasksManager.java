@@ -103,7 +103,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //спринт
                     }
                 }
             }
-            fileBackedTasksManager.idGenerator = maxId;
+            fileBackedTasksManager.id = maxId;
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка чтения файла.");
         }
@@ -211,7 +211,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //спринт
         return super.history();
     }
 
-    private void save() {
+    public void save() {
         try (Writer writer = new FileWriter(file)) {
             writer.write("id,type,name,status,description,epic\n");
             HashMap<Integer, Task> allTasks = new HashMap<>();
@@ -319,6 +319,5 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //спринт
         }
         return maxId;
     }
-
 
 }

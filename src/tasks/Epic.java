@@ -3,6 +3,8 @@ package tasks;
 import logic.TaskStatus;
 import logic.TaskType;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Epic extends Task {
@@ -25,7 +27,15 @@ public class Epic extends Task {
         subtaskIdList = new ArrayList<>();
         this.taskType = TaskType.EPIC;
         this.status = status;
+    }
 
+    public Epic(String title, String description,  LocalDateTime startTime, Duration duration) {
+        super(title, description, startTime, duration);
+        this.taskType = TaskType.EPIC;
+    }
+
+    public Epic(String title, String description, TaskStatus status, LocalDateTime startTime, Duration duration) {
+        super(title, description, status, startTime, duration);
     }
 
     public ArrayList<Integer> getSubtaskIdList() {
