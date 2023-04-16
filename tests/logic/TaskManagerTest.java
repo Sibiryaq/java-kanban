@@ -356,15 +356,15 @@ abstract class TaskManagerTest<T extends TaskManager> {
         epic = new Epic(200,"Эпик 1", "Пустой эпик");
         taskManager.epicCreator(epic);
 
-        subtask = new Subtask("Собрать коробки",
-                "Коробки на чердаке", TaskStatus.NEW,
+        subtask = new Subtask("Подзадача 1",
+                "Описание подзадачи 1", TaskStatus.NEW,
                 epic,
                 LocalDateTime.now().plusMinutes(100),
                 Duration.ofMinutes(30));
         taskManager.subtaskCreator(subtask); // первая задача в отсортированном списке
 
-        subtask2 = new Subtask("Упаковать кошку",
-                "Переноска за дверью", TaskStatus.NEW,
+        subtask2 = new Subtask("Подзадача 2",
+                "Описание подзадачи 2", TaskStatus.NEW,
                 epic,
                 LocalDateTime.now().plusMinutes(300),
                 Duration.ofHours(1).plusMinutes(30));
