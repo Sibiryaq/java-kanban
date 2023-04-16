@@ -21,7 +21,7 @@ class InMemoryHistoryManagerTest {
         assertNotNull(historyManager, "История не пустая!");
         assertEquals(0, historyManager.getHistory().size(), "В пустой истории не должно быть элементов!");
 
-        task = new Task(1, "Задача 1", "Задача для проверки дублирования.", TaskStatus.NEW);
+        task = new Task(1, "Задача 1", "Задача для проверки дублирования.");
 
         historyManager.addToHistory(task);
         assertEquals(1, historyManager.getHistory().size(), "В истории должна быть одна задача!");
@@ -37,16 +37,16 @@ class InMemoryHistoryManagerTest {
         assertDoesNotThrow(() -> historyManager.remove(1), "Удаление из пустой истории не должно вызывать исключений!");
 
         // Удаление из истории: начало, середина, конец.
-        task = new Task(1, "Задача 1", "Задача для удаления из начала истории", TaskStatus.NEW);
+        task = new Task(1, "Задача 1", "Задача для удаления из начала истории");
         historyManager.addToHistory(task);
 
-        task = new Task(2, "Задача 2", "Промежуточная задача для тестирования удаления", TaskStatus.DONE);
+        task = new Task(2, "Задача 2", "Промежуточная задача для тестирования удаления");
         historyManager.addToHistory(task);
 
-        task = new Task(3, "Задача 3", "Задача для удаления из середины истории", TaskStatus.IN_PROGRESS);
+        task = new Task(3, "Задача 3", "Задача для удаления из середины истории");
         historyManager.addToHistory(task);
 
-        task = new Task(4, "Задача 3", "Задача для удаления с конца истории", TaskStatus.NEW);
+        task = new Task(4, "Задача 3", "Задача для удаления с конца истории");
         historyManager.addToHistory(task);
 
         historyManager.remove(1);
@@ -65,7 +65,7 @@ class InMemoryHistoryManagerTest {
         assertNotNull(historyManager, "История не пустая!");
         assertEquals(0, historyManager.getHistory().size(), "История должна быть пустой!");
 
-        task = new Task(1, "Задача 1", "Задача для проверки дублирования.", TaskStatus.NEW);
+        task = new Task(1, "Задача 1", "Задача для проверки дублирования.");
 
         historyManager.addToHistory(task);
         assertEquals(1, historyManager.getHistory().size(), "В истории должна быть одна задача!");
@@ -75,16 +75,16 @@ class InMemoryHistoryManagerTest {
         assertEquals(1, historyManager.getHistory().size(), "В истории должна быть одна задача!");
 
         // Удаление из истории: начало, середина, конец.
-        task = new Task(1, "Задача 1", "Задача для удаления из начала истории", TaskStatus.NEW);
+        task = new Task(1, "Задача 1", "Задача для удаления из начала истории");
         historyManager.addToHistory(task);
 
-        task = new Task(2, "Задача 2", "Промежуточная задача для тестирования", TaskStatus.IN_PROGRESS);
+        task = new Task(2, "Задача 2", "Промежуточная задача для тестирования");
         historyManager.addToHistory(task);
 
-        task = new Task(3, "Задача 3", "Задача для удаления из середины истории", TaskStatus.DONE);
+        task = new Task(3, "Задача 3", "Задача для удаления из середины истории");
         historyManager.addToHistory(task);
 
-        task = new Task(4, "Задача 3", "Задача для удаления с конца истории", TaskStatus.IN_PROGRESS);
+        task = new Task(4, "Задача 3", "Задача для удаления с конца истории");
         historyManager.addToHistory(task);
 
         historyManager.remove(1);

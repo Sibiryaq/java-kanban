@@ -9,20 +9,30 @@ import java.time.LocalDateTime;
 public class Subtask extends Task {
     private Epic epic;
 
-    public Subtask(String title, String description, TaskStatus status, Epic epic) {
-        super(title, description, status);
+    public Subtask(Integer id, String title, String description, Epic epic) {
+        super(id, title, description, TaskType.SUBTASK);
         this.epic = epic;
-        this.taskType = TaskType.SUBTASK;
     }
 
-    public Subtask(int id, String title, String description, TaskStatus status, Epic epic) {
-        super(id, title, description, status);
+    public Subtask(String title, String description, Epic epic) {
+        super(title, description, TaskType.SUBTASK);
         this.epic = epic;
-        this.taskType = TaskType.SUBTASK;
+    }
+
+    public Subtask(String title, String description, TaskStatus status, Epic epic) {
+        super(title, description, TaskType.SUBTASK);
+        this.status = status;
+        this.epic = epic;
+    }
+
+    public Subtask(Integer id, String title, String description, Epic epic, LocalDateTime startTime, Duration duration) {
+        super(id, title, description, TaskType.SUBTASK, startTime, duration);
+        this.epic = epic;
     }
 
     public Subtask(String title, String description, TaskStatus status, Epic epic, LocalDateTime startTime, Duration duration) {
-        super(title, description, status, startTime, duration);
+        super(title, description, TaskType.SUBTASK, startTime, duration);
+        this.status = status;
         this.epic = epic;
     }
 
@@ -36,15 +46,14 @@ public class Subtask extends Task {
 
     @Override
     public String toString() {
-        return "ID подзадачи Subtask=\"" + id
-                + "\", Название подзадачи=\"" + title
-                + "\", Описание=\"" + description
-                + "\", Статус=\"" + status + "\""
-                + "\n";
+        return getId() + "," +
+                getTaskType() + "," +
+                getTitle() + "," +
+                getStatus() + "," +
+                getDescription() + "," +
+                getEpic().getId() + "," +
+                getStartTime() + "," +
+                (getDuration() == Duration.ZERO ? "" : getDuration());
     }
 
-    @Override
-    public String toStringFromFile() {
-        return String.format("%s,%s,%s,%s,%s,%s", id, taskType, title, status, description, epic.getId());
-    }
 }

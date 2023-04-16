@@ -9,11 +9,26 @@ import java.time.LocalDateTime;
 public class Task {
     protected String title;
     protected String description;
-    protected int id;
+    protected Integer id;
     protected TaskStatus status;
     protected TaskType taskType;
     protected Duration duration;
     protected LocalDateTime startTime;
+
+    public Task(Integer id, String title, String description) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        status = TaskStatus.NEW;
+        taskType = TaskType.TASK;
+    }
+
+    public Task(String title, String description) {
+        this.title = title;
+        this.description = description;
+        status = TaskStatus.NEW;
+        taskType = TaskType.TASK;
+    }
 
     public Task(String title, String description, TaskStatus status) {
         this.title = title;
@@ -22,65 +37,85 @@ public class Task {
         taskType = TaskType.TASK;
     }
 
-    public Task(String title, String description, TaskStatus status, LocalDateTime startTime, Duration duration) {
+    public Task(Integer id, String title, String description, TaskType taskType) {
+        this.id = id;
         this.title = title;
         this.description = description;
-        this.status = status;
-        this.startTime = startTime;
-        this.duration = duration;
+        status = TaskStatus.NEW;
+        this.taskType = taskType;
+    }
+
+    public Task(String title, String description, TaskType taskType) {
+        this.title = title;
+        this.description = description;
+        status = TaskStatus.NEW;
+        this.taskType = taskType;
+    }
+
+    public Task(Integer id, String title, String description, LocalDateTime startTime, Duration duration) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        status = TaskStatus.NEW;
         taskType = TaskType.TASK;
-    }
-
-    public Task(int id, String title, String description, TaskStatus status) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.status = status;
-        this.taskType = TaskType.TASK;
-    }
-
-    public Task(int id, String title, String description, TaskStatus status, LocalDateTime startTime, Duration duration) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.status = status;
         this.startTime = startTime;
         this.duration = duration;
-        this.taskType = TaskType.TASK;
     }
 
     public Task(String title, String description, LocalDateTime startTime, Duration duration) {
         this.title = title;
         this.description = description;
+        status = TaskStatus.NEW;
+        taskType = TaskType.TASK;
         this.startTime = startTime;
         this.duration = duration;
-        taskType = TaskType.TASK;
     }
 
+    public Task(Integer id, String title, String description, TaskType taskType, LocalDateTime startTime, Duration duration) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        status = TaskStatus.NEW;
+        this.taskType = taskType;
+        this.startTime = startTime;
+        this.duration = duration;
+    }
 
+    public Task(String title, String description, TaskType taskType, LocalDateTime startTime, Duration duration) {
+        this.title = title;
+        this.description = description;
+        status = TaskStatus.NEW;
+        this.taskType = taskType;
+        this.startTime = startTime;
+        this.duration = duration;
+    }
 
     public String getTitle() {
         return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public TaskStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(TaskStatus status) {
+        this.status = status;
     }
 
     public TaskType getTaskType() {
         return taskType;
-    }
-
-    public void setTaskType(TaskType taskType) {
-        this.taskType = taskType;
     }
 
     public Duration getDuration() {
@@ -99,33 +134,26 @@ public class Task {
         this.startTime = startTime;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public TaskStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(TaskStatus status) {
-        this.status = status;
+    public LocalDateTime getEndTime() {
+        if (startTime != null && duration != null)
+            return startTime.plusSeconds(duration.toSeconds());
+        else
+            return null;
     }
 
     @Override
     public String toString() {
-        return "ID задачи Task=\"" + id
-                + "\", Название задачи=\"" + title
-                + "\", Описание=\"" + description
-                + "\", Статус=\"" + status + "\""
-                + '}'
-                + "\n";
+        return getId() + "," +
+                getTaskType() + "," +
+                getTitle() + "," +
+                getStatus() + "," +
+                getDescription() + ",," +
+                getStartTime() + "," +
+                (getDuration() == Duration.ZERO ? "" : getDuration());
     }
+    /* Если метод getDuration() возвращает значение Duration.ZERO,
+    то вернуть пустую строку (""). В противном случае
+    вернуть результат вызова метода getDuration() в виде строки.
+     */
 
-    public String toStringFromFile() {
-        return String.format("%s,%s,%s,%s,%s,%s", id, taskType, title, status, description, "");
-    }
 }
