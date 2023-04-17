@@ -11,7 +11,7 @@ import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class FileBackedTasksManagerTest extends TaskManagerTest {
+class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
     FileBackedTasksManager taskManager1;
 
     @BeforeEach
@@ -22,12 +22,12 @@ class FileBackedTasksManagerTest extends TaskManagerTest {
     @Test
     void saveTest() {
         // Пустой список задач.
-        assertDoesNotThrow(() -> ((FileBackedTasksManager) taskManager).save(), "Сохранение менеджера с пустым списком задач не должно вызывать исключений!");
+        assertDoesNotThrow(() -> taskManager.save(), "Сохранение менеджера с пустым списком задач не должно вызывать исключений!");
 
         //b. Эпик без подзадач.
-        epic = new Epic(100, "Эпик 1", "Описание эпика");
+        Epic epic = new Epic(100, "Эпик 1", "Описание эпика");
         taskManager.epicCreator(epic);
-        ((FileBackedTasksManager) taskManager).save();
+        taskManager.save();
         taskManager1 = FileBackedTasksManager.loadFromFile(Paths.get("data/save_tasks.txt").toFile());
         assertEquals(1, taskManager1.getEpics().size(), "Количество задач менеджера после восстановления не совпало!");
         assertEquals(0, taskManager1.getSubtasks().size(), "Количество задач менеджера после восстановления не совпало!");
@@ -35,16 +35,15 @@ class FileBackedTasksManagerTest extends TaskManagerTest {
 
         // Пустой список истории.
         assertEquals(0, taskManager1.history().size(), "Количество задач в истории обращения после восстановления не совпало!");
-
     }
 
     //Тестирование метода загрузки списка задач из файла
     @Test
     void loadFromFileTest() {   //public static FileBackedTasksManager loadFromFile(Path file)
         // Эпик без подзадач.
-        epic = new Epic(100, "Эпик 1", "Пустой эпик");
-        taskManager.epicCreator(epic);
-        ((FileBackedTasksManager) taskManager).save();
+        Epic epic1 = new Epic(100, "Эпик 1", "Пустой эпик");
+        taskManager.epicCreator(epic1);
+        taskManager.save();
 
         taskManager1 = FileBackedTasksManager.loadFromFile(Paths.get("data/save_tasks.txt").toFile());
         assertEquals(1, taskManager1.getEpics().size(), "Количество задач менеджера после восстановления не совпало!");
@@ -53,23 +52,23 @@ class FileBackedTasksManagerTest extends TaskManagerTest {
         assertEquals(0, taskManager1.history().size(), "Количество задач в истории обращения после восстановления не совпало!");
 
         // Со стандартным поведением.
-        epic = new Epic(200, "Эпик 2", "Эпик с подзадачами");
-        taskManager.epicCreator(epic);
-        subtask = new Subtask("Подзадача 1", "Описание подзадачи 1", TaskStatus.NEW, epic);
-        taskManager.subtaskCreator(subtask); //1
+        Epic epic2 = new Epic(200, "Эпик 2", "Эпик с подзадачами");
+        taskManager.epicCreator(epic2);
+        Subtask subtask1 = new Subtask("Подзадача 1", "Описание подзадачи 1", TaskStatus.NEW, epic2);
+        taskManager.subtaskCreator(subtask1); //1
 
-        subtask2 = new Subtask("Подзадача 2", "Описание подзадачи 2", TaskStatus.NEW, epic);
+        Subtask subtask2 = new Subtask("Подзадача 2", "Описание подзадачи 2", TaskStatus.NEW, epic2);
         taskManager.subtaskCreator(subtask2); //2
 
-        task = new Task("Задача 1", "Описание задачи 1", TaskStatus.NEW);
-        taskManager.taskCreator(task); //3
+        Task task1 = new Task("Задача 1", "Описание задачи 1", TaskStatus.NEW);
+        taskManager.taskCreator(task1); //3
 
         taskManager.getTaskById(3);   //Добавление истории
 
         taskManager1 = FileBackedTasksManager.loadFromFile(Paths.get("data/save_tasks.txt").toFile());
-        assertEquals(taskManager1.getTaskById(3).getTitle(), task.getTitle());
-        assertEquals(taskManager1.getTaskById(3).getDescription(), task.getDescription());
-        assertEquals(taskManager1.getTaskById(3).getId(), task.getId());
+        assertEquals(taskManager1.getTaskById(3).getTitle(), task1.getTitle());
+        assertEquals(taskManager1.getTaskById(3).getDescription(), task1.getDescription());
+        assertEquals(taskManager1.getTaskById(3).getId(), task1.getId());
         assertEquals(1, taskManager1.getTasks().size(), "Количество задач менеджера после восстановления не совпало!");
         assertEquals(2, taskManager1.getSubtasks().size(), "Количество задач менеджера после восстановления не совпало!");
         assertEquals(2, taskManager1.getEpics().size(), "Количество задач менеджера после восстановления не совпало!");
@@ -79,7 +78,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest {
     @Test
     public void loadFromFileAnotherTest() {
         assertEquals(0, taskManager.history().size());
-        task = new Task("Задача", "Описание", TaskStatus.NEW);
+        Task task = new Task("Задача", "Описание", TaskStatus.NEW);
         taskManager.taskCreator(task);
         taskManager1 = FileBackedTasksManager.loadFromFile(Paths.get("data/save_tasks.txt").toFile());
         assertEquals(taskManager1.getTaskById(1).getTitle(), task.getTitle());
@@ -89,7 +88,7 @@ class FileBackedTasksManagerTest extends TaskManagerTest {
 
     @Test
     public void testingFileEpicWithoutSubtasks() {
-        epic = new Epic(100, "Эпик", "Описание");
+        Epic epic = new Epic(100, "Эпик", "Описание");
         taskManager.epicCreator(epic);
         taskManager1 = FileBackedTasksManager.loadFromFile(Paths.get("data/save_tasks.txt").toFile());
 

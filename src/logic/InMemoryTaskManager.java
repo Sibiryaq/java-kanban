@@ -13,44 +13,35 @@ public class InMemoryTaskManager implements TaskManager {
     protected HashMap<Integer, Epic> epicHashMap = new HashMap<>();
     protected HashMap<Integer, Subtask> subtaskHashMap = new HashMap<>();
     protected HistoryManager historyManager = Managers.getDefaultHistory();
-    protected TreeSet<Task> sortedTaskSet = new TreeSet<>((task1, task2) -> {
-        if (task1.getStartTime() != null && task2.getStartTime() != null) {
-            return task1.getStartTime().compareTo(task2.getStartTime());
-        } else if (task1.getStartTime() == null && task2.getStartTime() == null) {
-            return task1.getId().compareTo(task2.getId());
-        } else if (task1.getStartTime() == null) {
-            return 1;
-        } else return -1;
-    });
+    protected TreeSet<Task> sortedTaskSet = new TreeSet<>(this::compareTasks);
+    /*
+    Пробовал:
+    protected TreeSet<Task> sortedTaskSet = new TreeSet<>(Comparator.comparing(Task::getStartTime))
+    Тогда пол кода стало красным.
+
+    Оставил так:
+    protected TreeSet<Task> sortedTaskSet = new TreeSet<>(this::compareTasks);
+    и в самом низу сделал метод private int compareTasks(Task task1, Task task2) {}
+     */
+
 
     @Override
     public void taskCreator(Task task) {
-        if (!hasCorrectTime(task)) {
-            System.out.println("Новая задача пересекается по времени с уже существующей!");
-            return;
-        }
-        if (task.getId() == null) {
-            task.setId(++idGenerator);
-        }
+        createTask(task);
         taskHashMap.put(task.getId(), task);
         refreshSortedSet();
     }
 
     @Override
     public void subtaskCreator(Subtask subtask) {
-        if (!hasCorrectTime(subtask)) {
-            System.out.println("Новая задача пересекается по времени с уже существующей!");
-            return;
-        }
-        if (subtask.getId() == null) {
-            subtask.setId(++idGenerator);
-        }
+        createTask(subtask);
         subtaskHashMap.put(subtask.getId(), subtask);
         refreshSortedSet();
         subtask.getEpic().getSubtaskIdList().add(subtask);
         refreshDates(subtask.getEpic());
         calcEpicStatus(subtask.getEpic());
     }
+
 
     @Override
     public void epicCreator(Epic epic) {
@@ -242,9 +233,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (epic.getSubtaskIdList() != null) {
             for (Subtask subtask : epic.getSubtaskIdList()) {
                 if (subtask.getDuration() != null && subtask.getStartTime() != null) {
-                    if (firstDate == null || firstDate.isAfter(subtask.getStartTime()))
                         firstDate = subtask.getStartTime();
-                    if (lastDate == null || lastDate.isBefore(subtask.getEndTime()))
                         lastDate = subtask.getEndTime();
                     if (sumDuration == null)
                         sumDuration = subtask.getDuration();
@@ -259,27 +248,26 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public TreeSet<Task> getPrioritizedTasks() {
-        return sortedTaskSet;
+    public List<Task> getPrioritizedTasks() {
+        return new ArrayList<>(sortedTaskSet);
     }
 
     // Обновление сортировки списка задач и подзадач после изменений
+    // Обновление сортировки списка задач и подзадач после изменений
     private void refreshSortedSet() {
-        sortedTaskSet.clear();
+        if (subtaskHashMap.isEmpty() && taskHashMap.isEmpty()) {
+            sortedTaskSet.clear();
+            return;
+        }
         sortedTaskSet.addAll(subtaskHashMap.values());
         sortedTaskSet.addAll(taskHashMap.values());
     }
 
     //Проверка задач и подзадач на пересечение с другими по времени
     private boolean hasCorrectTime(Task newTask) {
-        Task task;
         if (newTask.getTaskType() != TaskType.EPIC) {
-            task = findTaskByTime(newTask.getStartTime(), newTask.getEndTime());
-            if (task == null) {
-                return true;
-            } else {
-                return false;
-            }
+            Task task = findTaskByTime(newTask.getStartTime(), newTask.getEndTime());
+            return task == null;
         }
         return true;
     }
@@ -295,5 +283,24 @@ public class InMemoryTaskManager implements TaskManager {
         return null;
     }
 
+    private int compareTasks(Task task1, Task task2) {
+        if (task1.getStartTime() != null && task2.getStartTime() != null) {
+            return task1.getStartTime().compareTo(task2.getStartTime());
+        } else if (task1.getStartTime() == null && task2.getStartTime() == null) {
+            return task1.getId().compareTo(task2.getId());
+        } else if (task1.getStartTime() == null) {
+            return 1;
+        } else return -1;
+    }
+
+    private void createTask(Task task) { //Два повторяющихся блока кода в taskCreator и subtaskCreator, лучше вынести в отдельный метод
+        if (!hasCorrectTime(task)) {
+            System.out.println("Новая задача пересекается по времени с уже существующей!");
+            return;
+        }
+        if (task.getId() == null) {
+            task.setId(++idGenerator);
+        }
+    }
 
 }

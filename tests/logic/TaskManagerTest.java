@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
 abstract class TaskManagerTest<T extends TaskManager> {
-    TaskManager taskManager;    //Получение менеджера задач
+    T taskManager;    //Чтобы дженерик сработал, следует его указать
     Task task;
     Task task2;
     Epic epic;

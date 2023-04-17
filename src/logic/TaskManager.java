@@ -4,7 +4,6 @@ import tasks.*;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.TreeSet;
 
 public interface TaskManager {
 
@@ -33,6 +32,6 @@ public interface TaskManager {
     void updateEpic(Epic epic);
 
     List<Task> history();
-    TreeSet<Task> getPrioritizedTasks();
+    List<Task> getPrioritizedTasks();
 
 }
