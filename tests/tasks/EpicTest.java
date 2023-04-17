@@ -28,7 +28,7 @@ class EpicTest {
         epic = new Epic(1, "Эпик 1", "Описание эпика");
         taskManager.epicCreator(epic);
         assertEquals(TaskStatus.NEW, taskManager.getEpicById(1).getStatus());
-        assertEquals(null, epic.getDuration());
+        assertNull(epic.getDuration());
     }
 
     //  b. Все подзадачи со статусом NEW.
@@ -86,7 +86,7 @@ class EpicTest {
         epic = new Epic(100, "Эпик 1", "Описание эпика 1");
         taskManager.epicCreator(epic);
         subtask1 = new Subtask("Подзадача 1", "Описание подзадачи", TaskStatus.NEW, epic,
-                LocalDateTime.of(2022, 8, 8, 8, 8), Duration.ofMinutes(10));
+                LocalDateTime.of(2022, 8, 8, 7, 8), Duration.ofMinutes(10));
         subtask2 = new Subtask("Подзадача 2", "Описание подзадачи", TaskStatus.NEW, epic,
                 LocalDateTime.of(2022, 8, 8, 8, 8), Duration.ofMinutes(25));
         taskManager.subtaskCreator(subtask1);
