@@ -14,27 +14,17 @@ public class InMemoryTaskManager implements TaskManager {
     protected HashMap<Integer, Subtask> subtaskHashMap = new HashMap<>();
     protected HistoryManager historyManager = Managers.getDefaultHistory();
     protected TreeSet<Task> sortedTaskSet = new TreeSet<>(this::compareTasks);
-    /*
-    Пробовал:
-    protected TreeSet<Task> sortedTaskSet = new TreeSet<>(Comparator.comparing(Task::getStartTime))
-    Тогда пол кода стало красным.
-
-    Оставил так:
-    protected TreeSet<Task> sortedTaskSet = new TreeSet<>(this::compareTasks);
-    и в самом низу сделал метод private int compareTasks(Task task1, Task task2) {}
-     */
-
-
+    
     @Override
     public void taskCreator(Task task) {
-        createTask(task);
+        checkTask(task);
         taskHashMap.put(task.getId(), task);
         refreshSortedSet();
     }
 
     @Override
     public void subtaskCreator(Subtask subtask) {
-        createTask(subtask);
+        checkTask(subtask);
         subtaskHashMap.put(subtask.getId(), subtask);
         refreshSortedSet();
         subtask.getEpic().getSubtaskIdList().add(subtask);
@@ -255,12 +245,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     // Обновление сортировки списка задач и подзадач после изменений
-    // Обновление сортировки списка задач и подзадач после изменений
     private void refreshSortedSet() {
-        if (subtaskHashMap.isEmpty() && taskHashMap.isEmpty()) {
-            sortedTaskSet.clear();
-            return;
-        }
         sortedTaskSet.addAll(subtaskHashMap.values());
         sortedTaskSet.addAll(taskHashMap.values());
     }
@@ -277,9 +262,12 @@ public class InMemoryTaskManager implements TaskManager {
     //Функция для поиска задач и подзадач по временному периоду
     private Task findTaskByTime(LocalDateTime startDate, LocalDateTime endDate) {
         if (startDate != null && endDate != null) {
-            Stream<Task> tasks = Stream.concat(taskHashMap.values().stream(), subtaskHashMap.values().stream())
+            Stream<Task> tasks = sortedTaskSet.stream()
                     .filter(task -> task.getTaskType() != TaskType.EPIC && task.getStartTime() != null && task.getDuration() != null)
                     .filter(task -> task.getStartTime().isAfter(startDate) && task.getEndTime().isBefore(endDate));
+            /*Если даты не null, фильтруем таски из sortedTaskSet, исключая все задачи типа epic
+             (поскольку они также могут хранить другие задачи), и задачи, для которых startTime или duration равны null
+             */
             return tasks.findFirst().orElse(null);
         }
         return null;
@@ -295,7 +283,7 @@ public class InMemoryTaskManager implements TaskManager {
         } else return -1;
     }
 
-    private void createTask(Task task) { //Два повторяющихся блока кода в taskCreator и subtaskCreator, лучше вынести в отдельный метод
+    private void checkTask(Task task) { //Два повторяющихся блока кода в taskCreator и subtaskCreator, лучше вынести в отдельный метод
         if (!hasCorrectTime(task)) {
             System.out.println("Новая задача пересекается по времени с уже существующей!");
             return;
