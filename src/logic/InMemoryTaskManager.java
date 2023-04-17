@@ -227,13 +227,15 @@ public class InMemoryTaskManager implements TaskManager {
     //Обновление дат начала/окончания и продолжительности эпика
     private void refreshDates(Epic epic) {
         Duration sumDuration = null;
-        LocalDateTime firstDate = null;
-        LocalDateTime lastDate = null;
+        LocalDateTime firstDate = epic.getStartTime();
+        LocalDateTime lastDate = epic.getEndTime();
 
         if (epic.getSubtaskIdList() != null) {
             for (Subtask subtask : epic.getSubtaskIdList()) {
                 if (subtask.getDuration() != null && subtask.getStartTime() != null) {
+                    if (firstDate == null || firstDate.isAfter(subtask.getStartTime()))
                         firstDate = subtask.getStartTime();
+                    if (lastDate == null || lastDate.isBefore(subtask.getEndTime()))
                         lastDate = subtask.getEndTime();
                     if (sumDuration == null)
                         sumDuration = subtask.getDuration();
