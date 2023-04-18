@@ -17,14 +17,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void taskCreator(Task task) {
-        checkId(task); // Проверили, был ли задан id, при создании задачи, если нет то сгенерировали, следующий свободный
+        setId(task); // Проверили, был ли задан id, при создании задачи, если нет то сгенерировали, следующий свободный
         taskHashMap.put(task.getId(), task); //положили задачу в мапу, по ее id
         checkTask(task); //проверили на пересечение, если пересечений нет, положили в дерево sortedTaskSet
     }
 
     @Override
     public void subtaskCreator(Subtask subtask) {
-        checkId(subtask);
+        setId(subtask);
         subtaskHashMap.put(subtask.getId(), subtask);
         subtask.getEpic().getSubtaskIdList().add(subtask);
         refreshDates(subtask.getEpic());
@@ -32,10 +32,9 @@ public class InMemoryTaskManager implements TaskManager {
         checkTask(subtask);
     }
 
-
     @Override
     public void epicCreator(Epic epic) {
-        checkId(epic);
+        setId(epic);
         epicHashMap.put(epic.getId(), epic);
     }
 
@@ -113,21 +112,21 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteTaskById(int id) {
         if (taskHashMap.containsKey(id)) {
-            taskHashMap.remove(id);
+            sortedTaskSet.remove(taskHashMap.get(id));
             historyManager.remove(id);
-            refreshSortedSet();
+            taskHashMap.remove(id);
         }
     }
 
     @Override
     public void deleteSubtaskById(int id) {
         if (subtaskHashMap.containsKey(id)) {
+            sortedTaskSet.remove(subtaskHashMap.get(id));
             Epic epic = subtaskHashMap.get(id).getEpic();
             epic.getSubtaskIdList().remove(subtaskHashMap.get(id));
             calcEpicStatus(epic);
             subtaskHashMap.remove(id);
             historyManager.remove(id);
-            refreshSortedSet();
         }
     }
 
@@ -262,9 +261,6 @@ public class InMemoryTaskManager implements TaskManager {
             Stream<Task> tasks = sortedTaskSet.stream()
                     .filter(task -> task.getTaskType() != TaskType.EPIC && task.getStartTime() != null && task.getDuration() != null)
                     .filter(task -> task.getStartTime().isAfter(startDate) && task.getEndTime().isBefore(endDate));
-            /*Если даты не null, фильтруем таски из sortedTaskSet, исключая все задачи типа epic
-             (поскольку они также могут хранить другие задачи), и задачи, для которых startTime или duration равны null
-             */
             return tasks.findFirst().orElse(null);
         }
         return null;
@@ -289,7 +285,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    private void checkId(Task task) {
+    private void setId(Task task) {
         if (task.getId() == null) {
             task.setId(++idGenerator);
         }
