@@ -239,13 +239,7 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Task> getPrioritizedTasks() {
         return new ArrayList<>(sortedTaskSet);
     }
-
-    // Обновление сортировки списка задач и подзадач после изменений
-    private void refreshSortedSet() {
-        sortedTaskSet.addAll(subtaskHashMap.values());
-        sortedTaskSet.addAll(taskHashMap.values());
-    }
-
+    
     //Проверка задач и подзадач на пересечение с другими по времени
     private boolean hasCorrectTime(Task newTask) {
         if (newTask.getTaskType() != TaskType.EPIC) {
