@@ -11,8 +11,8 @@ public class Epic extends Task {
     private LocalDateTime endTime; //Окончание последней задачи
 
     //Конструктор
-    public Epic(Integer id, String name, String details) {
-        super(id, name, details, TaskType.EPIC);
+    public Epic(Integer id, String title, String descriptions) {
+        super(id, title, descriptions, TaskType.EPIC);
 
         subtaskIdList = new ArrayList<>();
     }

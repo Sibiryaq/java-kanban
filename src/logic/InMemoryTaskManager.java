@@ -14,31 +14,28 @@ public class InMemoryTaskManager implements TaskManager {
     protected HashMap<Integer, Subtask> subtaskHashMap = new HashMap<>();
     protected HistoryManager historyManager = Managers.getDefaultHistory();
     protected TreeSet<Task> sortedTaskSet = new TreeSet<>(this::compareTasks);
-    
+
     @Override
     public void taskCreator(Task task) {
-        checkTask(task);
-        taskHashMap.put(task.getId(), task);
-        refreshSortedSet();
+        checkId(task); // Проверили, был ли задан id, при создании задачи, если нет то сгенерировали, следующий свободный
+        taskHashMap.put(task.getId(), task); //положили задачу в мапу, по ее id
+        checkTask(task); //проверили на пересечение, если пересечений нет, положили в дерево sortedTaskSet
     }
 
     @Override
     public void subtaskCreator(Subtask subtask) {
-        checkTask(subtask);
+        checkId(subtask);
         subtaskHashMap.put(subtask.getId(), subtask);
-        refreshSortedSet();
         subtask.getEpic().getSubtaskIdList().add(subtask);
         refreshDates(subtask.getEpic());
         calcEpicStatus(subtask.getEpic());
+        checkTask(subtask);
     }
 
 
     @Override
     public void epicCreator(Epic epic) {
-        if (epic.getId() == null) {
-            epic.setId(++idGenerator);
-        }
-        epic.setStatus(TaskStatus.NEW);
+        checkId(epic);
         epicHashMap.put(epic.getId(), epic);
     }
 
@@ -156,7 +153,7 @@ public class InMemoryTaskManager implements TaskManager {
                 return;
             }
             taskHashMap.put(task.getId(), task);
-            refreshSortedSet();
+            checkTask(task);
         }
     }
 
@@ -169,7 +166,7 @@ public class InMemoryTaskManager implements TaskManager {
             }
             subtaskHashMap.put(subtask.getId(), subtask);
             calcEpicStatus(subtask.getEpic());
-            refreshSortedSet();
+            checkTask(subtask);
         }
     }
 
@@ -283,11 +280,16 @@ public class InMemoryTaskManager implements TaskManager {
         } else return -1;
     }
 
-    private void checkTask(Task task) { //Два повторяющихся блока кода в taskCreator и subtaskCreator, лучше вынести в отдельный метод
+    private void checkTask(Task task) {
         if (!hasCorrectTime(task)) {
-            System.out.println("Новая задача пересекается по времени с уже существующей!");
+            System.out.println("Новая задача пересекается по времени с уже существующей");
             return;
+        } else {
+            sortedTaskSet.add(task);
         }
+    }
+
+    private void checkId(Task task) {
         if (task.getId() == null) {
             task.setId(++idGenerator);
         }
