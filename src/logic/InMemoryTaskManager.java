@@ -54,6 +54,18 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
+    public HashMap<Integer, Task> getAllTasks() {
+        HashMap<Integer, Task> allTasks = new HashMap<>();
+
+        allTasks.putAll(getTasks());
+        allTasks.putAll(getEpics());
+        allTasks.putAll(getSubtasks());
+
+        return allTasks;
+    }
+
+
+    @Override
     public void deleteAllTasks() {
         taskHashMap.clear();
     }

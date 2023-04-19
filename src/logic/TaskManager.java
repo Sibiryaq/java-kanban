@@ -14,6 +14,7 @@ public interface TaskManager {
     HashMap<Integer, Task> getTasks();
     HashMap<Integer, Subtask> getSubtasks();
     HashMap<Integer, Epic> getEpics();
+    HashMap<Integer, Task> getAllTasks();
 
     void deleteAllTasks();
     void deleteAllSubtasks();

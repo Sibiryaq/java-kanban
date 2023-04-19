@@ -77,9 +77,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //Спринт
         for (Task taskFor : manager1.history()) {
             System.out.println("#" + taskFor.getId() + " - " + taskFor.getTitle() + " " + taskFor.getDescription() + " (" + taskFor.getStatus() + ")");
         }
-
-
     }
+
 
     void save() {
         try (Writer writer = new FileWriter(file)) {
