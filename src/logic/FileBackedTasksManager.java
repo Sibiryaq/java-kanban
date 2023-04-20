@@ -1,6 +1,6 @@
 package logic;
 
-import exception.*;
+import exceptions.*;
 import tasks.*;
 
 import java.io.File;
