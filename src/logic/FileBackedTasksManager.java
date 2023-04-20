@@ -17,11 +17,15 @@ import java.util.HashMap;
 import java.util.List;
 
 public class FileBackedTasksManager extends InMemoryTaskManager { //Спринт 6. класс для второй реализации менеджера, автосохранение в файл
-    private final File file;
+    private File file;
 
     public FileBackedTasksManager(File file) {
         this.file = file;
     }
+
+    public FileBackedTasksManager() {
+    }
+
 
     //Метод для проверки работы менеджера
     public static void main(String[] args) {

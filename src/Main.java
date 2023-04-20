@@ -1,13 +1,26 @@
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import json.DurationAdapter;
+import json.LocalDateTimeAdapter;
 import logic.Managers;
 import logic.TaskManager;
-
 import logic.TaskStatus;
+
+import network.HttpTaskServer;
+import network.KVServer;
 import tasks.*;
 
-public class Main {
-    public static void main(String[] args) {
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
-        TaskManager manager = Managers.getDefault();
+public class Main {
+
+    public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
+
+        TaskManager manager = Managers.getInMemoryTaskManager();
      /*
      5 спринт. Создайте две задачи, эпик с тремя подзадачами и эпик без подзадач:
      */
@@ -82,5 +95,26 @@ public class Main {
         System.out.println("Список обращений к задачам после удаления Эпика #1000:");
         for (Task taskFor : manager.history())
             System.out.println("#" + taskFor.getId() + " - " + taskFor.getTitle() + " " + taskFor.getDescription() + " (" + taskFor.getStatus() + ")");
+
+        System.out.println("______________ попытка запуска сервера");
+        KVServer kvServer = new KVServer();
+        kvServer.start();
+        URI uriKVServer = KVServer.getServerURL();
+        System.out.println("______________ вызова менеджера и загрузки задач с сервера");
+        TaskManager manager1 = Managers.getDefault(uriKVServer);
+        System.out.println("______________ Запуск http сервера менеджера");
+        new HttpTaskServer(manager1).start();
+
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .registerTypeAdapter(Duration.class, new DurationAdapter())
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
+
+        Task task11 = new Task("2000", "10000",
+                LocalDateTime.of(2001, 1, 1, 1, 1, 1),
+                Duration.ofMinutes(20));
+        System.out.println(gson.toJson(task11));
     }
 }

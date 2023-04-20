@@ -1,5 +1,6 @@
 package logic;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
@@ -18,6 +19,14 @@ class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager>
     public void beforeEach() {
         taskManager = new FileBackedTasksManager(new File("data/save_tasks.txt"));
     }
+
+    @AfterEach
+    void clear() {
+        taskManager.deleteAllTasks();
+        taskManager.deleteAllSubtasks();
+        taskManager.deleteAllEpics();
+    }
+
 
     @Test
     void saveTest() {

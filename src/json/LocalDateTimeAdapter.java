@@ -6,9 +6,11 @@ import com.google.gson.stream.JsonWriter;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
+// Преобразование даты в json и обратно
 //Класс-адаптер для корректного преобразования даты в json и обратно
-public class LocalDateTimeTypeAdapter extends TypeAdapter<LocalDateTime> {
+public class LocalDateTimeAdapter extends TypeAdapter<LocalDateTime> {
     @Override
     public void write(final JsonWriter jsonWriter, final LocalDateTime date) throws IOException {
         if (date != null)
