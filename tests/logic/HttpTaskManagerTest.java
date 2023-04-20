@@ -1,6 +1,7 @@
 package logic;
 
-import network.KVServer;
+import network.*;
+
 import org.junit.jupiter.api.Assertions;
 import tasks.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,47 +36,48 @@ class HttpTaskManagerTest {
     void getTest() {
         Task task1 = new Task("2001", "11",
                 LocalDateTime.of(2001, 1, 1, 1, 1, 1), Duration.ofMinutes(20));
-        Epic epic1 = new Epic("эпик включающий2009", "55");
-        Subtask subtask1 = new Subtask("2009", "66", TaskStatus.DONE, epic1,
+        Epic epic1 = new Epic(2, "эпик включающий2009", "55");
+        Subtask Subtask1 = new Subtask("2009", "66", TaskStatus.DONE, epic1,
                 LocalDateTime.of(2009, 1, 1, 1, 1, 1), Duration.ofMinutes(20));
         Task taskForEquals = task1;
         taskForEquals.setId(1);
         Epic epic1ForEquals = epic1;
         epic1ForEquals.setId(2);
-        Subtask subtask1ForEquals = subtask1;
-        subtask1ForEquals.setId(3);
+        Subtask Subtask1ForEquals = Subtask1;
+        Subtask1ForEquals.setId(3);
+        //epic1ForEquals.addNewSubtaskInEpic(Subtask1);
 
         HashMap<Integer, Task> taskHashMap = new HashMap<>();
         HashMap<Integer, Epic> epicHashMap = new HashMap<>();
-        HashMap<Integer, Subtask> subtaskHashMap = new HashMap<>();
+        HashMap<Integer, Subtask> SubtaskHashMap = new HashMap<>();
         taskHashMap.put(1, taskForEquals);
         epicHashMap.put(2, epic1ForEquals);
-        subtaskHashMap.put(3, subtask1ForEquals);
+        SubtaskHashMap.put(3, Subtask1ForEquals);
         manager.taskCreator(task1);
         manager.epicCreator(epic1);
-        manager.subtaskCreator(subtask1);
+        manager.subtaskCreator(Subtask1);
         manager.loadManagerFromKVServer();
         Assertions.assertEquals(manager.getTaskById(1), taskHashMap.get(1), "таск не совпадает");
         Assertions.assertEquals(manager.getEpicById(2), epicHashMap.get(2), "эпик не совпадает");
-        Assertions.assertEquals(manager.getSubtaskById(3), subtaskHashMap.get(3), "сабтаск не совпадает");
+        Assertions.assertEquals(manager.getSubtaskById(3), SubtaskHashMap.get(3), "сабтаск не совпадает");
         Assertions.assertEquals(manager.getEpicById(2).getSubtaskIdList(), epicHashMap.get(2).getSubtaskIdList(),
-                "внутренний сабтаск не совпадает");
+                "внутреннай сабтаск не совпадает");
         Assertions.assertEquals(manager.getTasks(), taskHashMap, "хэшмап тасков не совпадает");
         Assertions.assertEquals(manager.getEpics(), epicHashMap, "хэшмап эпиков не совпадает");
-        Assertions.assertEquals(manager.getSubtasks(), subtaskHashMap, "хэшмап сабтасков не совпадает");
+        Assertions.assertEquals(manager.getSubtasks(), SubtaskHashMap, "хэшмап сабтасков не совпадает");
     }
-/*
+
     @Test
     void deleteTest() {
-        Task task1 = new Task(TaskType.TASK, "2001", TaskStatus.NEW,
-                LocalDateTime.of(2001, 1, 1, 1, 1, 1), Duration.ofMinutes(20), "11");
-        Epic epic1 = new Epic(TaskType.EPIC, "эпик включающий2009", "55", TaskStatus.NEW);
-        Subtask subtask1 = new Subtask(TaskType.SUBTASK, "2009", TaskStatus.DONE,
-                LocalDateTime.of(2009, 1, 1, 1, 1, 1), Duration.ofMinutes(20), "66", 2);
+        Task task1 = new Task("2001","11",
+                LocalDateTime.of(2001, 1, 1, 1, 1, 1), Duration.ofMinutes(20));
+        Epic epic1 = new Epic(2, "эпик включающий2009", "55");
+        Subtask Subtask1 = new Subtask("2009", "11", TaskStatus.DONE, epic1,
+                LocalDateTime.of(2009, 1, 1, 1, 1, 1), Duration.ofMinutes(20));
 
         manager.taskCreator(task1);
         manager.epicCreator(epic1);
-        manager.subtaskCreator(subtask1);
+        manager.subtaskCreator(Subtask1);
         manager.loadManagerFromKVServer();
         manager.deleteTaskById(1);
         manager.deleteSubtaskById(3);
@@ -86,7 +88,7 @@ class HttpTaskManagerTest {
 
         manager.taskCreator(task1);
         manager.epicCreator(epic1);
-        manager.subtaskCreator(subtask1);
+        manager.subtaskCreator(Subtask1);
         manager.loadManagerFromKVServer();
         manager.deleteAllTasks();
         manager.deleteAllSubtasks();
@@ -94,5 +96,5 @@ class HttpTaskManagerTest {
         Assertions.assertNull(manager.getTaskById(4), "таски не удалены");
         Assertions.assertNull(manager.getEpicById(5), "эпики не удалены");
         Assertions.assertNull(manager.getSubtaskById(6), "сабтаски не удалены");
-    } */
+    }
 }

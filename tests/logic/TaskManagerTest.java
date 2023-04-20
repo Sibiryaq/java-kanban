@@ -316,9 +316,9 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @Test
     void historyTest() {
         // С пустым списком задач.
-        assertDoesNotThrow(() -> taskManager.history(),
+        assertDoesNotThrow(() -> taskManager.getTaskHistory(),
                 "Запрос пустой истории обращений не должен вызывать исключений!");
-        assertNotNull(taskManager.history(), "История не пустая!");
+        assertNotNull(taskManager.getTaskHistory(), "История не пустая!");
 
         // Со стандартным поведением.
         task = new Task("Задача 1", "Задача для тестирования");
@@ -328,23 +328,23 @@ abstract class TaskManagerTest<T extends TaskManager> {
         subtask = new Subtask("Подзадача 1", "Подзадача для тестирования", TaskStatus.NEW, epic);
         taskManager.subtaskCreator(subtask);
 
-        assertEquals(0, taskManager.history().size(),
+        assertEquals(0, taskManager.getTaskHistory().size(),
                 "Размер истории обращений не верен!");
 
         taskManager.getTaskById(1);
         taskManager.getSubtaskById(2);
         taskManager.getEpicById(100);
-        assertEquals(3, taskManager.history().size(),
+        assertEquals(3, taskManager.getTaskHistory().size(),
                 "Размер истории обращений не верен!");
 
         task2 = new Task(1, "Задача 2", "Задача для тестирования");
 
         taskManager.updateTask(task2); // задача обновилась, но она уже есть в истории, кол-во записей в истории прежнее
-        assertEquals(3, taskManager.history().size(),
+        assertEquals(3, taskManager.getTaskHistory().size(),
                 "Размер истории обращений не верен!");
 
         taskManager.deleteTaskById(1); // задача удалилась, следовательно, ее нужно удалить из истории, кол-во записей в истории: 2
-        assertEquals(2, taskManager.history().size(),
+        assertEquals(2, taskManager.getTaskHistory().size(),
                 "Размер истории обращений не верен!");
     }
 

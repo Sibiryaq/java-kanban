@@ -66,7 +66,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //Спринт
 
         //Просмотр истории обращения к задачам
         System.out.println("\nСписок обращений к задачам:");
-        for (Task taskFor : manager.history()) {
+        for (Task taskFor : manager.getTaskHistory()) {
             System.out.println(taskFor);
         }
 
@@ -78,7 +78,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //Спринт
         // Вывод списка задач
         System.out.println("Всего создано задач - " + (manager1.getTasks().size() + manager1.getSubtasks().size() + manager1.getEpics().size()));
         System.out.println("\nСписок обращений к задачам после загрузки из файла:");
-        for (Task taskFor : manager1.history()) {
+        for (Task taskFor : manager1.getTaskHistory()) {
             System.out.println("#" + taskFor.getId() + " - " + taskFor.getTitle() + " " + taskFor.getDescription() + " (" + taskFor.getStatus() + ")");
         }
     }
@@ -198,8 +198,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //Спринт
     }
 
     @Override
-    public List<Task> history() {
-        return super.history();
+    public List<Task> getTaskHistory() {
+        return super.getTaskHistory();
     }
 
     public static FileBackedTasksManager loadFromFile(File file) {

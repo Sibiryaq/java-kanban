@@ -57,7 +57,7 @@ public class HttpTaskManager extends FileBackedTasksManager {
             String subtaskToGson = gson.toJson(getSubtasks());
             client.put("subtask", subtaskToGson);
         }
-        if (history() == null || getTaskHistory().isEmpty()) {
+        if (getTaskHistory() == null || getTaskHistory().isEmpty()) {
             System.out.println("история пуста");
         } else {
             String historyToGson = gson.toJson(getTaskHistory());

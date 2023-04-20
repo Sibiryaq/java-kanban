@@ -51,7 +51,7 @@ public class Main {
         manager.getSubtaskById(3);
 
         System.out.println("Список обращений к задачам:");
-        for (Task taskFor : manager.history())
+        for (Task taskFor : manager.getTaskHistory())
             System.out.println("#" + taskFor.getId() + " - " + taskFor.getTitle() + " " + taskFor.getDescription() + " (" + taskFor.getStatus() + ")");
 
         System.out.println("\n----------Второе обращение к задачам (20,10,200,100,3,2,1):");
@@ -64,7 +64,7 @@ public class Main {
         manager.getSubtaskById(1);
 
         System.out.println("Список обращений к задачам:");
-        for (Task taskFor : manager.history())
+        for (Task taskFor : manager.getTaskHistory())
             System.out.println("#" + taskFor.getId() + " - " + taskFor.getTitle() + " " + taskFor.getDescription() + " (" + taskFor.getStatus() + ")");
 
      /*
@@ -74,7 +74,7 @@ public class Main {
         System.out.println("Удалим задачу #1, которая есть в истории.");
         manager.deleteTaskById(10);
         System.out.println("Проверим не осталась ли она в истории: ");
-        for (Task taskFor : manager.history())
+        for (Task taskFor : manager.getTaskHistory())
             System.out.println("#" + taskFor.getId() + " - " + taskFor.getTitle() + " " + taskFor.getDescription() + " (" + taskFor.getStatus() + ")");
 
      /*
@@ -87,17 +87,7 @@ public class Main {
      5 спринт. Убедитесь, что из истории удалился как сам эпик, так и все его подзадачи
      */
         System.out.println("Список обращений к задачам после удаления Эпика #1000:");
-        for (Task taskFor : manager.history())
+        for (Task taskFor : manager.getTaskHistory())
             System.out.println("#" + taskFor.getId() + " - " + taskFor.getTitle() + " " + taskFor.getDescription() + " (" + taskFor.getStatus() + ")");
-
-        System.out.println("______________ попытка запуска сервера");
-        KVServer kvServer = new KVServer();
-        kvServer.start();
-        URI uriKVServer = KVServer.getServerURL();
-
-        System.out.println("______________ вызова менеджера и загрузки задач с сервера");
-        TaskManager manager1 = Managers.getDefault(uriKVServer);
-        System.out.println("______________ Запуск http сервера менеджера");
-        new HttpTaskServer(manager1).start();
     }
 }

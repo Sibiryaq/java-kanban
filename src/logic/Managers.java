@@ -1,5 +1,7 @@
 package logic;
 
+import network.HttpTaskManager;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
