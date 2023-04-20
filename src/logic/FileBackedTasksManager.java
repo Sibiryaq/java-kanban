@@ -1,6 +1,6 @@
 package logic;
 
-import exceptions.*;
+import exception.*;
 import tasks.*;
 
 import java.io.File;
@@ -84,7 +84,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //Спринт
     }
 
 
-    void save() {
+     public void save() {
         try (Writer writer = new FileWriter(file)) {
             writer.write("id,type,title,status,description,epic,startTime,duration\n");
             HashMap<Integer, Task> allTasks = new HashMap<>();

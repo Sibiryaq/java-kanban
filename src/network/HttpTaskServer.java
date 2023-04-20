@@ -1,13 +1,13 @@
 package network;
 
-import json.DurationAdapter;
-import json.LocalDateTimeAdapter;
+import adapters.DurationAdapter;
+import adapters.LocalDateTimeAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import exceptions.ManagerSaveException;
+import exception.ManagerSaveException;
 import logic.TaskManager;
 import tasks.Epic;
 import tasks.Subtask;
@@ -110,7 +110,7 @@ public class HttpTaskServer {
                         httpExchange.sendResponseHeaders(200, 0);
                     }
                     if (path.endsWith("/history/")) {
-                        response = gson.toJson(manager.history());
+                        response = gson.toJson(manager.getTaskHistory());
                         httpExchange.sendResponseHeaders(200, 0);
                     }
                     break;

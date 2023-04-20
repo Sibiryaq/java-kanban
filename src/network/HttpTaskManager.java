@@ -1,11 +1,11 @@
-package logic;
+package network;
 
-
-import com.google.gson.*;
+import adapters.DurationAdapter;
+import adapters.LocalDateTimeAdapter;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import json.DurationAdapter;
-import json.LocalDateTimeAdapter;
-import network.KVTaskClient;
+import logic.FileBackedTasksManager;
 import tasks.*;
 
 import java.io.IOException;
@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
 public class HttpTaskManager extends FileBackedTasksManager {
     KVTaskClient client;
     private String API_TOKEN;
@@ -24,10 +25,14 @@ public class HttpTaskManager extends FileBackedTasksManager {
     public HttpTaskManager(URI KVUri) throws IOException, InterruptedException {
         client = new KVTaskClient(KVUri);
         API_TOKEN = client.getApiToken();
-        gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).registerTypeAdapter(Duration.class, new DurationAdapter()).setPrettyPrinting().serializeNulls().create();
+        gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .registerTypeAdapter(Duration.class, new DurationAdapter())
+                .setPrettyPrinting()
+                .serializeNulls()
+                .create();
         loadManagerFromKVServer();
     }
-
 
     @Override
     public void save() {
@@ -36,6 +41,7 @@ public class HttpTaskManager extends FileBackedTasksManager {
         } else {
             String taskToGson = gson.toJson(getTasks());
             client.put("task", taskToGson);
+
         }
 
         if (getEpics().isEmpty()) {
@@ -51,10 +57,10 @@ public class HttpTaskManager extends FileBackedTasksManager {
             String subtaskToGson = gson.toJson(getSubtasks());
             client.put("subtask", subtaskToGson);
         }
-        if (history() == null || history().isEmpty()) {
+        if (history() == null || getTaskHistory().isEmpty()) {
             System.out.println("история пуста");
         } else {
-            String historyToGson = gson.toJson(history());
+            String historyToGson = gson.toJson(getTaskHistory());
             client.put("history", historyToGson);
         }
     }
@@ -66,8 +72,9 @@ public class HttpTaskManager extends FileBackedTasksManager {
     }
 
     public void loadTasks() {
-        HashMap<Integer, Task> normalTasksLoaded = gson.fromJson(client.load("task"), new TypeToken<HashMap<Integer, Task>>() {
-        }.getType());
+        HashMap<Integer, Task> normalTasksLoaded = gson.fromJson(client.load("task"),
+                new TypeToken<HashMap<Integer, Task>>() {
+                }.getType());
         if (normalTasksLoaded != null) {
             for (Task task : normalTasksLoaded.values()) {
                 taskHashMap.put(task.getId(), task);
@@ -77,8 +84,9 @@ public class HttpTaskManager extends FileBackedTasksManager {
             }
         }
 
-        HashMap<Integer, Epic> epicTasksLoaded = gson.fromJson(client.load("epic"), new TypeToken<HashMap<Integer, Epic>>() {
-        }.getType());
+        HashMap<Integer, Epic> epicTasksLoaded = gson.fromJson(client.load("epic"),
+                new TypeToken<HashMap<Integer, Epic>>() {
+                }.getType());
         if (epicTasksLoaded != null) {
             for (Epic epic : epicTasksLoaded.values()) {
                 epicHashMap.put(epic.getId(), epic);
@@ -88,8 +96,9 @@ public class HttpTaskManager extends FileBackedTasksManager {
             }
         }
 
-        HashMap<Integer, Subtask> subTasksLoaded = gson.fromJson(client.load("subtask"), new TypeToken<HashMap<Integer, Subtask>>() {
-        }.getType());
+        HashMap<Integer, Subtask> subTasksLoaded = gson.fromJson(client.load("subtask"),
+                new TypeToken<HashMap<Integer, Subtask>>() {
+                }.getType());
         if (subTasksLoaded != null) {
             for (Subtask subTask : subTasksLoaded.values()) {
                 subtaskHashMap.put(subTask.getId(), subTask);
@@ -111,10 +120,10 @@ public class HttpTaskManager extends FileBackedTasksManager {
     }
 
     void loadSortedTask() {
-        if (!taskHashMap.isEmpty()) {
+        if (!taskHashMap.isEmpty() && taskHashMap != null) {
             sortedTaskSet.addAll(taskHashMap.values());
         }
-        if (!subtaskHashMap.isEmpty()) {
+        if (!subtaskHashMap.isEmpty() && subtaskHashMap != null) {
             sortedTaskSet.addAll(subtaskHashMap.values());
         }
     }

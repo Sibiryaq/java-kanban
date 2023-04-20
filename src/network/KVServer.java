@@ -5,7 +5,9 @@ import java.net.InetSocketAddress;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+
 import static network.KVUrl.*;
+
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 
@@ -143,5 +145,3 @@ public class KVServer {
         h.getResponseBody().write(resp);
     }
 }
-
-

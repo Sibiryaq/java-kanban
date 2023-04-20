@@ -1,4 +1,4 @@
-package json;
+package adapters;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
@@ -7,7 +7,6 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.time.Duration;
 
-// Преобразование продолжительности в json и обратно
 public class DurationAdapter extends TypeAdapter<Duration> {
 
     @Override

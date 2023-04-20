@@ -32,7 +32,8 @@ public interface TaskManager {
     void updateSubtask(Subtask subtask);
     void updateEpic(Epic epic);
 
-    List<Task> history();
+    List<Task> getTaskHistory();
     List<Task> getPrioritizedTasks();
 
 }
+

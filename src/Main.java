@@ -1,7 +1,3 @@
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import json.DurationAdapter;
-import json.LocalDateTimeAdapter;
 import logic.Managers;
 import logic.TaskManager;
 import logic.TaskStatus;
@@ -13,8 +9,6 @@ import tasks.*;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.time.Duration;
-import java.time.LocalDateTime;
 
 public class Main {
 
@@ -100,21 +94,10 @@ public class Main {
         KVServer kvServer = new KVServer();
         kvServer.start();
         URI uriKVServer = KVServer.getServerURL();
+
         System.out.println("______________ вызова менеджера и загрузки задач с сервера");
         TaskManager manager1 = Managers.getDefault(uriKVServer);
         System.out.println("______________ Запуск http сервера менеджера");
         new HttpTaskServer(manager1).start();
-
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                .registerTypeAdapter(Duration.class, new DurationAdapter())
-                .setPrettyPrinting()
-                .serializeNulls()
-                .create();
-
-        Task task11 = new Task("2000", "10000",
-                LocalDateTime.of(2001, 1, 1, 1, 1, 1),
-                Duration.ofMinutes(20));
-        System.out.println(gson.toJson(task11));
     }
 }

@@ -1,7 +1,5 @@
 package logic;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import network.KVServer;
 import org.junit.jupiter.api.Assertions;
 import tasks.*;
