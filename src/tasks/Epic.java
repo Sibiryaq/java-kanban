@@ -17,13 +17,6 @@ public class Epic extends Task {
         subtaskIdList = new ArrayList<>();
     }
 
-    //Конструктор
-    public Epic(String title, String descriptions) {
-        super(title, descriptions, TaskType.EPIC);
-
-        subtaskIdList = new ArrayList<>();
-    }
-
     public ArrayList<Subtask> getSubtaskIdList() {
         return subtaskIdList;
     }

@@ -1,20 +1,13 @@
 import logic.Managers;
 import logic.TaskManager;
-import logic.TaskStatus;
 
-import network.HttpTaskServer;
-import network.KVServer;
+import logic.TaskStatus;
 import tasks.*;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
 public class Main {
+    public static void main(String[] args) {
 
-    public static void main(String[] args) throws IOException, URISyntaxException, InterruptedException {
-
-        TaskManager manager = Managers.getInMemoryTaskManager();
+        TaskManager manager = Managers.getDefault();
      /*
      5 спринт. Создайте две задачи, эпик с тремя подзадачами и эпик без подзадач:
      */
@@ -51,7 +44,7 @@ public class Main {
         manager.getSubtaskById(3);
 
         System.out.println("Список обращений к задачам:");
-        for (Task taskFor : manager.getTaskHistory())
+        for (Task taskFor : manager.history())
             System.out.println("#" + taskFor.getId() + " - " + taskFor.getTitle() + " " + taskFor.getDescription() + " (" + taskFor.getStatus() + ")");
 
         System.out.println("\n----------Второе обращение к задачам (20,10,200,100,3,2,1):");
@@ -64,7 +57,7 @@ public class Main {
         manager.getSubtaskById(1);
 
         System.out.println("Список обращений к задачам:");
-        for (Task taskFor : manager.getTaskHistory())
+        for (Task taskFor : manager.history())
             System.out.println("#" + taskFor.getId() + " - " + taskFor.getTitle() + " " + taskFor.getDescription() + " (" + taskFor.getStatus() + ")");
 
      /*
@@ -74,7 +67,7 @@ public class Main {
         System.out.println("Удалим задачу #1, которая есть в истории.");
         manager.deleteTaskById(10);
         System.out.println("Проверим не осталась ли она в истории: ");
-        for (Task taskFor : manager.getTaskHistory())
+        for (Task taskFor : manager.history())
             System.out.println("#" + taskFor.getId() + " - " + taskFor.getTitle() + " " + taskFor.getDescription() + " (" + taskFor.getStatus() + ")");
 
      /*
@@ -87,7 +80,7 @@ public class Main {
      5 спринт. Убедитесь, что из истории удалился как сам эпик, так и все его подзадачи
      */
         System.out.println("Список обращений к задачам после удаления Эпика #1000:");
-        for (Task taskFor : manager.getTaskHistory())
+        for (Task taskFor : manager.history())
             System.out.println("#" + taskFor.getId() + " - " + taskFor.getTitle() + " " + taskFor.getDescription() + " (" + taskFor.getStatus() + ")");
     }
 }

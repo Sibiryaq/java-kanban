@@ -96,9 +96,4 @@ class InMemoryHistoryManagerTest {
         historyManager.remove(4);
         assertEquals(1, historyManager.getHistory().size(), "Задача в конце истории не была удалена!");
     }
-
-    @Test
-    void getEmptyHistory() {
-        assertEquals(0, historyManager.getHistory().size());
-    }
 }

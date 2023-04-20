@@ -4,7 +4,6 @@ import logic.Managers;
 import logic.TaskManager;
 import logic.TaskStatus;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -20,15 +19,12 @@ class EpicTest {
 
     @BeforeEach
     public void beforeEach() {
-        taskManager = Managers.getInMemoryTaskManager();
+        taskManager = Managers.getDefault();
     }
 
     //  a. Пустой список подзадач.
-    @DisplayName("GIVEN new taskManager" +
-            "WHEN a new epic created" +
-            "THEN its status should be .NEW and duration .ZERO")
     @Test
-    public void test1_testingForEpicEmptyListOfSubtasks() {
+    public void testingForEpicEmptyListOfSubtasks() {
         epic = new Epic(1, "Эпик 1", "Описание эпика");
         taskManager.epicCreator(epic);
         assertEquals(TaskStatus.NEW, taskManager.getEpicById(1).getStatus());

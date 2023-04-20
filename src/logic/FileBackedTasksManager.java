@@ -17,15 +17,11 @@ import java.util.HashMap;
 import java.util.List;
 
 public class FileBackedTasksManager extends InMemoryTaskManager { //Спринт 6. класс для второй реализации менеджера, автосохранение в файл
-    private File file;
+    private final File file;
 
     public FileBackedTasksManager(File file) {
         this.file = file;
     }
-
-    public FileBackedTasksManager() {
-    }
-
 
     //Метод для проверки работы менеджера
     public static void main(String[] args) {
@@ -66,7 +62,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //Спринт
 
         //Просмотр истории обращения к задачам
         System.out.println("\nСписок обращений к задачам:");
-        for (Task taskFor : manager.getTaskHistory()) {
+        for (Task taskFor : manager.history()) {
             System.out.println(taskFor);
         }
 
@@ -78,13 +74,14 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //Спринт
         // Вывод списка задач
         System.out.println("Всего создано задач - " + (manager1.getTasks().size() + manager1.getSubtasks().size() + manager1.getEpics().size()));
         System.out.println("\nСписок обращений к задачам после загрузки из файла:");
-        for (Task taskFor : manager1.getTaskHistory()) {
+        for (Task taskFor : manager1.history()) {
             System.out.println("#" + taskFor.getId() + " - " + taskFor.getTitle() + " " + taskFor.getDescription() + " (" + taskFor.getStatus() + ")");
         }
+
+
     }
 
-
-     public void save() {
+    void save() {
         try (Writer writer = new FileWriter(file)) {
             writer.write("id,type,title,status,description,epic,startTime,duration\n");
             HashMap<Integer, Task> allTasks = new HashMap<>();
@@ -198,8 +195,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager { //Спринт
     }
 
     @Override
-    public List<Task> getTaskHistory() {
-        return super.getTaskHistory();
+    public List<Task> history() {
+        return super.history();
     }
 
     public static FileBackedTasksManager loadFromFile(File file) {

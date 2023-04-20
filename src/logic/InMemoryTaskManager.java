@@ -54,18 +54,6 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public HashMap<Integer, Task> getAllTasks() {
-        HashMap<Integer, Task> allTasks = new HashMap<>();
-
-        allTasks.putAll(getTasks());
-        allTasks.putAll(getEpics());
-        allTasks.putAll(getSubtasks());
-
-        return allTasks;
-    }
-
-
-    @Override
     public void deleteAllTasks() {
         taskHashMap.clear();
     }
@@ -191,7 +179,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public List<Task> getTaskHistory() { //historyTest
+    public List<Task> history() { //historyTest
         return historyManager.getHistory();
     }
 
@@ -251,7 +239,7 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Task> getPrioritizedTasks() {
         return new ArrayList<>(sortedTaskSet);
     }
-    
+
     //Проверка задач и подзадач на пересечение с другими по времени
     private boolean hasCorrectTime(Task newTask) {
         if (newTask.getTaskType() != TaskType.EPIC) {
@@ -299,3 +287,4 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
 }
+
