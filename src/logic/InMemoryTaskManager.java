@@ -17,9 +17,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void taskCreator(Task task) {
-        setId(task); // Проверили, был ли задан id, при создании задачи, если нет то сгенерировали, следующий свободный
-        taskHashMap.put(task.getId(), task); //положили задачу в мапу, по ее id
-        checkTask(task); //проверили на пересечение, если пересечений нет, положили в дерево sortedTaskSet
+        setId(task);
+        taskHashMap.put(task.getId(), task);
+        checkTask(task);
     }
 
     @Override
@@ -183,6 +183,34 @@ public class InMemoryTaskManager implements TaskManager {
         return historyManager.getHistory();
     }
 
+    public void refreshSortedSet() {
+        sortedTaskSet.clear();
+        sortedTaskSet.addAll(subtaskHashMap.values());
+        sortedTaskSet.addAll(taskHashMap.values());
+    }
+
+    public ArrayList<Task> getTasksList() {
+        ArrayList<Task> result = new ArrayList<>();
+        result.addAll(taskHashMap.values());
+        result.addAll(epicHashMap.values());
+        return result;
+    }
+
+    public Task getTask(int id) {
+        HashMap<Integer, Task> allTasks = new HashMap<>();
+
+        allTasks.putAll(taskHashMap);
+        allTasks.putAll(taskHashMap);
+        allTasks.putAll(taskHashMap);
+
+        if (allTasks.containsKey(id)) {
+            historyManager.addToHistory(allTasks.get(id));
+            return allTasks.get(id);
+        } else {
+            return null;
+        }
+    }
+
     private void calcEpicStatus(Epic epic) {
         if (epic.getSubtaskIdList().size() == 0) {
             epic.setStatus(TaskStatus.NEW);
@@ -285,6 +313,8 @@ public class InMemoryTaskManager implements TaskManager {
             task.setId(++idGenerator);
         }
     }
+
+
 
 }
 
