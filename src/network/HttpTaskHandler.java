@@ -38,6 +38,8 @@ public class HttpTaskHandler implements HttpHandler {
  Либо toString переопределен неверное, либо метод сохранения, даже не знаю куда думать
  Может адаптеры кривые, но тоже там вроде ничего лишнего
 
+ Приношу извенения что вам столько всего приходится проверять..
+
   */
     public HttpTaskHandler(TaskManager manager) {
         this.manager = manager;
