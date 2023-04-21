@@ -1,4 +1,4 @@
-package logic;
+package tasks;
 
 public enum TaskType {
     TASK,

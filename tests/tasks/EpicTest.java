@@ -2,7 +2,6 @@ package tasks;
 
 import logic.Managers;
 import logic.TaskManager;
-import logic.TaskStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +18,7 @@ class EpicTest {
 
     @BeforeEach
     public void beforeEach() {
-        taskManager = Managers.getDefault();
+        taskManager = Managers.getInMemoryTaskManager();
     }
 
     //  a. Пустой список подзадач.

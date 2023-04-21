@@ -1,8 +1,5 @@
 package tasks;
 
-import logic.TaskStatus;
-import logic.TaskType;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 

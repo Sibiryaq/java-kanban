@@ -1,20 +1,20 @@
 package tasks;
 
-import logic.TaskType;
-
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Epic extends Task {
-    private ArrayList<Subtask> subtaskIdList;
+    private ArrayList<Subtask> subtaskIdList = new ArrayList<>();;
     private LocalDateTime endTime; //Окончание последней задачи
 
     //Конструктор
     public Epic(Integer id, String title, String descriptions) {
         super(id, title, descriptions, TaskType.EPIC);
+    }
 
-        subtaskIdList = new ArrayList<>();
+    public Epic(String title, String descriptions) {
+        super(title, descriptions, TaskType.EPIC);
     }
 
     public ArrayList<Subtask> getSubtaskIdList() {
