@@ -33,10 +33,10 @@ class HttpTaskManagerTest {
     @Test
     void getTest() {
         Task task1 = new Task("2001", "11",
-                LocalDateTime.of(2001, 1, 1, 1, 1, 1), Duration.ofMinutes(20));
+                LocalDateTime.of(2001, 1, 1, 1, 1), Duration.ofMinutes(20));
         Epic epic1 = new Epic("эпик включающий2009", "55");
         Subtask subtask1 = new Subtask("2009", "66", TaskStatus.DONE, epic1,
-                LocalDateTime.of(2009, 1, 1, 1, 1, 1), Duration.ofMinutes(20));
+                LocalDateTime.of(2009, 1, 1, 1, 1), Duration.ofMinutes(20));
         Task taskForEquals = task1;
         taskForEquals.setId(1);
         Epic epic1ForEquals = epic1;
@@ -67,10 +67,10 @@ class HttpTaskManagerTest {
     @Test
     void deleteTest() {
         Task task1 = new Task("2001", "11",
-                LocalDateTime.of(2001, 1, 1, 1, 1, 1), Duration.ofMinutes(20));
+                LocalDateTime.of(2001, 1, 1, 1, 1), Duration.ofMinutes(20));
         Epic epic1 = new Epic("эпик включающий2009", "55");
         Subtask subtask1 = new Subtask("2009", "66", TaskStatus.DONE, epic1,
-                LocalDateTime.of(2009, 1, 1, 1, 1, 1), Duration.ofMinutes(20));
+                LocalDateTime.of(2009, 1, 1, 1, 1), Duration.ofMinutes(20));
 
         manager.taskCreator(task1);
         manager.epicCreator(epic1);

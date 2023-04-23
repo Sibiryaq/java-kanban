@@ -1,21 +1,16 @@
 package network;
 
-import adapters.DurationAdapter;
-import adapters.LocalDateTimeAdapter;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import logic.FileBackedTasksManager;
+import network.util.GsonUtil;
 import tasks.*;
 
 import java.io.IOException;
 import java.net.URI;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 
 public class HttpTaskManager extends FileBackedTasksManager {
     KVTaskClient client;
@@ -25,12 +20,7 @@ public class HttpTaskManager extends FileBackedTasksManager {
     public HttpTaskManager(URI KVUri) throws IOException, InterruptedException {
         client = new KVTaskClient(KVUri);
         API_TOKEN = client.getApiToken();
-        gson = new GsonBuilder().
-                registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter()).
-                registerTypeAdapter(Duration.class, new DurationAdapter()).
-                setPrettyPrinting().
-                serializeNulls().
-                create();
+        gson = GsonUtil.createGson();
         loadManagerFromKVServer();
     }
 

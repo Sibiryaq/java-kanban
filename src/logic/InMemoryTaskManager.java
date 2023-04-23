@@ -16,27 +16,30 @@ public class InMemoryTaskManager implements TaskManager {
     protected TreeSet<Task> sortedTaskSet = new TreeSet<>(this::compareTasks);
 
     @Override
-    public void taskCreator(Task task) {
+    public Task taskCreator(Task task) {
         setId(task);
         taskHashMap.put(task.getId(), task);
         checkTask(task);
+        return task;
     }
 
     @Override
-    public void subtaskCreator(Subtask subtask) {
+    public Subtask subtaskCreator(Subtask subtask) {
         setId(subtask);
         subtaskHashMap.put(subtask.getId(), subtask);
         subtask.getEpic().getSubtaskIdList().add(subtask);
         refreshDates(subtask.getEpic());
         calcEpicStatus(subtask.getEpic());
         checkTask(subtask);
+        return subtask;
     }
 
 
     @Override
-    public void epicCreator(Epic epic) {
+    public Epic epicCreator(Epic epic) {
         setId(epic);
         epicHashMap.put(epic.getId(), epic);
+        return epic;
     }
 
     @Override

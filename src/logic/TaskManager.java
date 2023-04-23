@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface TaskManager {
 
-    void taskCreator(Task task);
-    void subtaskCreator(Subtask subtask);
-    void epicCreator(Epic epic);
+    Task taskCreator(Task task);
+    Subtask subtaskCreator(Subtask subtask);
+    Epic epicCreator(Epic epic);
 
     HashMap<Integer, Task> getTasks();
     HashMap<Integer, Subtask> getSubtasks();

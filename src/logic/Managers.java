@@ -8,7 +8,7 @@ import java.net.URISyntaxException;
 
 public class Managers {
 
-    public static TaskManager getDefault(URI uri) throws IOException, URISyntaxException, InterruptedException {
+    public static HttpTaskManager getDefault(URI uri) throws IOException, InterruptedException {
         return new HttpTaskManager(uri);
    }
 

@@ -39,7 +39,7 @@ class HttpTaskServerTest {
         kvServer.start();
         URI uriKVServer = KVServer.getServerURL();
         manager = new HttpTaskManager(uriKVServer);
-        httpTaskServer = new HttpTaskServer(manager);
+        httpTaskServer = new HttpTaskServer();
         httpTaskServer.start();
     }
 
