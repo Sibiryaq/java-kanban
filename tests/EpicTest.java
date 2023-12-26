@@ -22,7 +22,7 @@ class EpicTest {
     private static Epic epic;
 
     @BeforeAll
-    public static void createTasksForTesting() { // создаем по 1 задаче для тестирования, чтобы id эпика был зафиксирован
+    public static void createTasksForTesting() {
         epic = new Epic("testEpic", "testDescription", 0, Status.NEW);
         TASK_MANAGER.createEpic(epic);
 
@@ -38,17 +38,17 @@ class EpicTest {
     }
 
     @Test
-    public void epicStatusShouldWorkInEveryCase () { // статус эпика должен правильно считаться во всех случаях
+    public void epicStatusShouldWorkInEveryCase () {
         TASK_MANAGER.deleteAllSubTasks();
 
         assertEquals(0, epic.getSubtaskIds().size());
-        assertEquals(Status.NEW, epic.getStatus()); // статус должен быть New при пустом списке
+        assertEquals(Status.NEW, epic.getStatus());
 
-        TASK_MANAGER.createSubTask(subtask); // возвращаем подзадачи
+        TASK_MANAGER.createSubTask(subtask);
         TASK_MANAGER.createSubTask(subtask1);
         TASK_MANAGER.createSubTask(subtask2);
 
-        assertEquals(Status.NEW, epic.getStatus()); // статус должен быть New при всех подзадачах со статусом NEW
+        assertEquals(Status.NEW, epic.getStatus());
 
         subtask.setStatus(Status.DONE);
         subtask1.setStatus(Status.DONE);
@@ -58,7 +58,7 @@ class EpicTest {
         TASK_MANAGER.updateSubTask(subtask1);
         TASK_MANAGER.updateSubTask(subtask2);
 
-        assertEquals(Status.DONE, epic.getStatus()); // статус должен быть DONE при всех подзадачах со статусом DONE
+        assertEquals(Status.DONE, epic.getStatus());
 
         subtask.setStatus(Status.NEW);
         subtask2.setStatus(Status.NEW);
@@ -66,7 +66,7 @@ class EpicTest {
         TASK_MANAGER.updateSubTask(subtask);
         TASK_MANAGER.updateSubTask(subtask2);
 
-        assertEquals(Status.IN_PROGRESS, epic.getStatus()); // статус должен быть In_progress, когда 1 NEW, а вторая DONE
+        assertEquals(Status.IN_PROGRESS, epic.getStatus());
 
         subtask.setStatus(Status.IN_PROGRESS);
         subtask1.setStatus(Status.IN_PROGRESS);
@@ -76,7 +76,7 @@ class EpicTest {
         TASK_MANAGER.updateSubTask(subtask1);
         TASK_MANAGER.updateSubTask(subtask2);
 
-        assertEquals(Status.IN_PROGRESS, epic.getStatus()); // статус должен быть In_progress, когда все In_progress
+        assertEquals(Status.IN_PROGRESS, epic.getStatus());
     }
 
     @Test
@@ -85,17 +85,17 @@ class EpicTest {
     }
 
     @Test
-    public void startTimeOfEpicShouldBe14H07M () { // время начала эпика должно быть 14:07
+    public void startTimeOfEpicShouldBe14H07M () {
         assertEquals(LocalDateTime.of(2023, Month.MARCH, 16, 14, 2), epic.getStartTime());
     }
 
     @Test
-    public void endTimeOfEpicShouldBe14H37 () { // время конца эпика должно быть 14:35, по subTask2 времени
+    public void endTimeOfEpicShouldBe14H37 () {
         assertEquals(LocalDateTime.of(2023, Month.MARCH, 16, 14, 37), epic.getEndTime());
     }
 
     @Test
-    public void subtask1ShouldNotBeInPrioritizedTasks () { // в приоритетн.задачах не должно быть пересечения
+    public void subtask1ShouldNotBeInPrioritizedTasks () {
         assertFalse(TASK_MANAGER.getPrioritizedTasks().contains(subtask1));
     }
 

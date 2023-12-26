@@ -139,8 +139,7 @@ public class HttpTaskServer {
                     } else {
                         String taskString = readText(httpExchange);
                         Task task = gson.fromJson(taskString, Task.class);
-                        if (task.getUniqueID() != id) { // иначе можно обновить задачу, если неправильную цифру указать в пути,
-                                                    // но при этом в памяти есть такая задача
+                        if (task.getUniqueID() != id) {
                             System.out.println("Идентификаторы задач не совпадают!");
                             httpExchange.sendResponseHeaders(HTTP_BAD_REQUEST, 0);
                             return;

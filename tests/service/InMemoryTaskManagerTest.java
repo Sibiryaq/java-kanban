@@ -10,7 +10,7 @@ import java.time.Month;
 
 class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager> {
 
-    @BeforeEach // создаем по 1 задаче для тестирования, чтобы id эпика был зафиксирован
+    @BeforeEach
     public void createTasksForTesting() {
         super.setTaskManager(new InMemoryTaskManager());
         task = new Task("testTask", "testDescription", 0, Status.NEW, 15,

@@ -163,7 +163,7 @@ class HttpTaskServerTest {
         assertEquals(body, tasks);
     }
 
-    @Test /* должны получить 405 код ошибки, если не указать ид эпика в пути */
+    @Test
     void shouldGet405ErrorForGettingEpicsSubtasksWithEmptyId () throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/subtask/epic");
         HttpRequest request = HttpRequest.newBuilder().uri(url).GET().build();
@@ -207,7 +207,7 @@ class HttpTaskServerTest {
         assertEquals(405, code);
     }
 
-    @Test /* должны получить ошибку, если не указать тип задачи для создания */
+    @Test
     void shouldGetErrorIfTypeOfTaskIsNotSpecifiedForPOST() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks");
         String someTask = gson.toJson(new Task("Test", "description", 0, Status.NEW));
@@ -319,7 +319,7 @@ class HttpTaskServerTest {
         assertEquals("changed description", description);
     }
 
-    @Test /* должны получить ошибку, если указать неправильный тип задачи для создания / обновления */
+    @Test
     void shouldGetErrorWithWrongTypeOfTask() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/oops");
         String someTask = gson.toJson(new Task("Test", "description", 0, Status.NEW));
@@ -333,7 +333,7 @@ class HttpTaskServerTest {
         assertEquals(400, code);
     }
 
-    @Test /* должны получить ошибку, если указать вместо цифры ид указать букву */
+    @Test
     void shouldGetErrorWhenUpdatingTaskWithWrongId() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/task/a");
         String someTask = gson.toJson(new Task("Test", "description", 1, Status.DONE));
@@ -349,7 +349,7 @@ class HttpTaskServerTest {
         assertEquals(Status.NEW, taskManager.getTask(1).getStatus());
     }
 
-    @Test /* должны получить ошибку, если указать неправильный номер ид для конкретной задачи */
+    @Test
     void shouldGetErrorIfUpdateWithWrongNumberId() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/task/2");
         String someTask = gson.toJson(new Task("Test", "description", 1, Status.DONE));
@@ -365,7 +365,7 @@ class HttpTaskServerTest {
         assertEquals(Status.NEW, taskManager.getTask(1).getStatus());
     }
 
-    @Test /* должны получить ошибку, если не указать тип задачи для удаления */
+    @Test
     void shouldGetErrorIfTypeOfTaskIsNotSpecifiedForDelete() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks");
         HttpRequest request = HttpRequest.newBuilder()
@@ -468,7 +468,7 @@ class HttpTaskServerTest {
         assertEquals(0, taskManager.getEpics().size());
     }
 
-    @Test /* подзадача не удалится с неверным идентификатором */
+    @Test
     void shouldNotDeleteSubtaskWithWrongId() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/subtask/4");
         HttpRequest request = HttpRequest.newBuilder()
@@ -483,7 +483,7 @@ class HttpTaskServerTest {
         assertEquals(1, taskManager.getSubtasks().size());
     }
 
-    @Test /* должны получить ошибку, если указать букву вместо цифры ид для удаления */
+    @Test
     void shouldGetErrorWhenDeleteNotNumberId() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/subtask/a");
         HttpRequest request = HttpRequest.newBuilder()
@@ -498,7 +498,7 @@ class HttpTaskServerTest {
         assertEquals(1, taskManager.getSubtasks().size());
     }
 
-    @Test /* должны получить ошибку, если указать неверный тип задач для удаления */
+    @Test
     void shouldGetErrorWhenDeleteWrongTypeTask() throws IOException, InterruptedException {
         URI url = URI.create("http://localhost:8080/tasks/foo");
         HttpRequest request = HttpRequest.newBuilder()

@@ -12,7 +12,7 @@ public class InMemoryHistoryManager<T extends Task> implements HistoryManager<T>
 
     CustomLinkedList<Task> historyTasks = new CustomLinkedList<>();
 
-    protected final Map<Integer, Node<Task>> sortingTasks = new HashMap<>(); // ошибка в истории была из-за static
+    protected final Map<Integer, Node<Task>> sortingTasks = new HashMap<>();
 
     @Override
     public void add(Task task) {

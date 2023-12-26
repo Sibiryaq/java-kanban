@@ -188,7 +188,7 @@ public class InMemoryTaskManager implements TaskManager{
         }
     }
 
-    protected boolean checkTimeClashes (Task task) { // проверяем пересечения времени
+    protected boolean checkTimeClashes (Task task) {
         if (task == null) {
             return true;
         }
@@ -201,9 +201,6 @@ public class InMemoryTaskManager implements TaskManager{
             if (task1.getStartTime() == null || task.getStartTime() == null) {
                 continue;
             }
-            /* пусть первая задача 14:02 // endTime 14:17
-               а вторая 14:07          // endTime 14:22
-               значит 14:07 is After 14:02 && Before 14:17*/
             if (task.getStartTime().isAfter(task1.getStartTime()) && task.getStartTime().isBefore(task1.getEndTime())) {
                 noClashes = false;
             }
@@ -212,12 +209,12 @@ public class InMemoryTaskManager implements TaskManager{
     }
 
     private void checkEpicStartTimeAndDuration(Epic epic) {
-        SubTask subTask = getSubtask(epic.getSubtaskIds().get(0)); // берем подзадачу по первому индексу эпика
+        SubTask subTask = getSubtask(epic.getSubtaskIds().get(0));
         if(subTask.getStartTime() == null) {
             return;
         }
-        LocalDateTime minStartTime = subTask.getStartTime(); // задаем минимум для начального времени
-        LocalDateTime maxEndTime = subTask.getEndTime(); // задаем минимум для конечного времени
+        LocalDateTime minStartTime = subTask.getStartTime();
+        LocalDateTime maxEndTime = subTask.getEndTime();
         int duration;
         for (Integer subtaskId : epic.getSubtaskIds()) {
             subTask = getSubtask(subtaskId);
@@ -260,7 +257,7 @@ public class InMemoryTaskManager implements TaskManager{
                     subtasks.remove(subtaskId);
                     subsToDelete.add(subtaskId);
                 }
-                tasksId.removeAll(subsToDelete); // из самого списка tasksId не удаляли эти ид подзадач
+                tasksId.removeAll(subsToDelete);
                 epics.remove(id);
             }
             historyManager.remove(id);

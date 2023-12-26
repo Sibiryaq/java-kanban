@@ -93,7 +93,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
     }
 
     @Override
-    public Task getTask(int id) { // переопределяем эти методы, чтобы сохранять историю, когда обращаемся к задачам
+    public Task getTask(int id) {
         Task task = super.getTask(id);
         save();
         return task;
@@ -232,7 +232,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager implements TaskMa
         return null;
     }
 
-    protected String separateTasksFromLists(List<?> list) { //достаем задачи из списка по строкам, чтобы не было [] в save
+    protected String separateTasksFromLists(List<?> list) {
         StringBuilder sb = new StringBuilder();
         for (Object task : list) {
             sb.append(task.toString());

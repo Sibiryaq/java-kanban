@@ -18,7 +18,7 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
 
     private File file;
 
-    @BeforeEach // создаем по 1 задаче для тестирования, чтобы id эпика был зафиксирован
+    @BeforeEach
     public void createTasksForTesting() {
         file = new File("resources/test_" + System.nanoTime() + ".csv");
         super.setTaskManager(new FileBackedTaskManager(file.toString()));
@@ -39,13 +39,13 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
         assertTrue(file.delete());
     }
 
-    @Test // должен выбрасывать исключение при загрузке из неправ файла
+    @Test
     public void shouldThrowExceptionWithWrongPath () {
         assertThrows(FileNotFoundException.class, () -> taskManager.loadFromFile(new File
                 ("resources/wrongFile.csv")));
     }
 
-    @Test // должен загружать из файла
+    @Test
     public void shouldLoadFromFile () throws FileNotFoundException {
 
         List<Task> historyTasks = taskManager.getHistoryManager().getHistory();
