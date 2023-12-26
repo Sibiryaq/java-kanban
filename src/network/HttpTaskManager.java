@@ -105,7 +105,7 @@ public class HttpTaskManager extends FileBackedTasksManager {
         }
     }
 
-    void loadSortedTask() { // Если мапа пуста, то valuev вернет пустой набор, никак не повлияя на sortedTask
+    void loadSortedTask() {
         sortedTaskSet.addAll(taskHashMap.values());
         sortedTaskSet.addAll(subtaskHashMap.values());
     }

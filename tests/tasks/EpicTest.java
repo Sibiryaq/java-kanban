@@ -21,7 +21,6 @@ class EpicTest {
         taskManager = Managers.getInMemoryTaskManager();
     }
 
-    //  a. Пустой список подзадач.
     @Test
     public void testingForEpicEmptyListOfSubtasks() {
         epic = new Epic(1, "Эпик 1", "Описание эпика");
@@ -30,7 +29,6 @@ class EpicTest {
         assertNull(epic.getDuration());
     }
 
-    //  b. Все подзадачи со статусом NEW.
     @Test
     public void testingForEpicAllSubtasksWithStatusNew() {
         epic = new Epic(100, "Эпик 1", "Описание эпика 1");
@@ -44,7 +42,6 @@ class EpicTest {
         assertEquals(TaskStatus.NEW, epic.getStatus());
     }
 
-    //  c. Все подзадачи со статусом DONE.
     @Test
     public void testingForEpicAllSubtasksWithStatusDone() {
         epic = new Epic(100, "Эпик 1", "Описание эпика");
@@ -56,7 +53,6 @@ class EpicTest {
         assertEquals(TaskStatus.DONE, epic.getStatus());
     }
 
-    //  d. Подзадачи со статусами NEW и DONE.
     @Test
     public void testingForEpicSubtasksWithStatusNewAndDone() {
         epic = new Epic(100, "Эпик 1", "Описание эпика");
@@ -68,7 +64,6 @@ class EpicTest {
         assertEquals(TaskStatus.IN_PROGRESS, epic.getStatus());
     }
 
-    //  e. Подзадачи со статусом IN_PROGRESS.
     @Test
     public void testingForEpicSubtasksWithStatusInProgress() {
         epic = new Epic(100, "Эпик 1", "Описание эпика");
@@ -105,6 +100,6 @@ class EpicTest {
         taskManager.subtaskCreator(subtask1);
         taskManager.subtaskCreator(subtask2);
         assertEquals(Duration.ofMinutes(25), epic.getDuration(),
-                "Продолжительность Эпика не равна сумме продолжительности Подзадач!"); //0+25=25
+                "Продолжительность Эпика не равна сумме продолжительности Подзадач!");
     }
 }

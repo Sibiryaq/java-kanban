@@ -3,13 +3,11 @@ package tasks;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class Epic extends Task {
-    private ArrayList<Subtask> subtaskIdList = new ArrayList<>();;
-    private LocalDateTime endTime; //Окончание последней задачи
+    private ArrayList<Subtask> subtaskIdList = new ArrayList<>();
+    private LocalDateTime endTime;
 
-    //Конструктор
     public Epic(Integer id, String title, String descriptions) {
         super(id, title, descriptions, TaskType.EPIC);
     }
